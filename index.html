@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recall — flashcards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12110F;
+  --surface:#1A1917;
+  --surface-2:#211F1C;
+  --border:#2E2C28;
+  --border-lit:#413E38;
+  --text:#EDEAE3;
+  --text-dim:#B5AFA4;
+  --muted:#8A857B;
+  --accent:#C8A96A;
+  --accent-dim:#6B5A38;
+  --again:#C4634F;
+  --hard:#BE8B4C;
+  --good:#6E9E78;
+  --easy:#5E90A8;
+  --radius:12px;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Inter',ui-sans-serif,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;align-items:center;
+  padding:24px 18px 48px;
+  min-height:100%;
+}
+.wrap{width:100%;max-width:720px;}
+
+/* ---------- header ---------- */
+header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:12px;margin-bottom:28px;flex-wrap:wrap;
+}
+.logo{
+  font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-0.01em;
+}
+.logo span{color:var(--accent);}
+.head-meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);display:flex;gap:14px;}
+.head-meta b{color:var(--text-dim);font-weight:500;}
+
+/* ---------- generic ---------- */
+.panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.eyebrow{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:10px;
+}
+h2.title{
+  font-family:var(--serif);font-size:26px;font-weight:500;
+  letter-spacing:-0.015em;margin-bottom:6px;
+}
+p.sub{color:var(--muted);font-size:13.5px;line-height:1.6;margin-bottom:22px;}
+.hidden{display:none !important;}
+
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.btn{
+  background:var(--accent);color:#191712;font-weight:600;font-size:14px;
+  padding:12px 22px;border-radius:8px;transition:filter .15s,transform .05s;
+}
+.btn:hover{filter:brightness(1.08);}
+.btn:active{transform:translateY(1px);}
+.btn:disabled{opacity:.35;cursor:not-allowed;filter:none;}
+.btn-ghost{
+  border:1px solid var(--border-lit);color:var(--text-dim);font-size:12.5px;
+  padding:9px 14px;border-radius:7px;font-family:var(--mono);
+}
+.btn-ghost:hover{border-color:var(--accent-dim);color:var(--text);}
+
+/* ---------- upload ---------- */
+#dropzone{
+  padding:52px 24px;text-align:center;border:1px dashed var(--border-lit);
+  border-radius:var(--radius);background:var(--surface);
+  transition:border-color .15s,background .15s;cursor:pointer;
+}
+#dropzone.over{border-color:var(--accent);background:var(--surface-2);}
+#dropzone .big{font-family:var(--serif);font-size:19px;margin-bottom:8px;}
+#dropzone .small{font-size:12.5px;color:var(--muted);font-family:var(--mono);}
+.schema{
+  margin-top:18px;padding:16px 18px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;
+  font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  line-height:1.75;white-space:pre;overflow-x:auto;
+}
+.schema b{color:var(--accent);font-weight:500;}
+
+/* ---------- setup ---------- */
+.section{margin-bottom:26px;}
+.topic-row{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background .12s;
+}
+.topic-row:last-child{border-bottom:none;}
+.topic-row:hover{background:var(--surface-2);}
+.tick{
+  width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border-lit);
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  transition:all .12s;
+}
+.topic-row.on .tick{background:var(--accent);border-color:var(--accent);}
+.tick svg{width:10px;height:10px;opacity:0;}
+.topic-row.on .tick svg{opacity:1;}
+.topic-name{flex:1;font-size:13.5px;line-height:1.4;color:var(--text-dim);}
+.topic-row.on .topic-name{color:var(--text);}
+.topic-stats{font-family:var(--mono);font-size:10.5px;color:var(--muted);display:flex;gap:9px;flex:0 0 auto;}
+.pill{padding:2px 7px;border-radius:20px;border:1px solid var(--border-lit);}
+.pill.due{color:var(--accent);border-color:var(--accent-dim);}
+.pill.new{color:var(--easy);border-color:#2F4652;}
+
+.select-all{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:9px;
+}
+.mini-link{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:underline;text-decoration-color:var(--border-lit);}
+.mini-link:hover{color:var(--accent);}
+
+.seg{display:flex;gap:8px;}
+.seg button{
+  flex:1;padding:14px;border:1px solid var(--border);border-radius:10px;
+  background:var(--surface);text-align:left;transition:all .12s;
+}
+.seg button:hover{border-color:var(--border-lit);}
+.seg button.on{border-color:var(--accent);background:var(--surface-2);}
+.seg .m-name{font-size:13.5px;font-weight:600;margin-bottom:3px;}
+.seg button.on .m-name{color:var(--accent);}
+.seg .m-desc{font-size:11.5px;color:var(--muted);line-height:1.45;}
+
+.len-row{display:flex;gap:8px;flex-wrap:wrap;}
+.len-row button{
+  padding:8px 16px;border:1px solid var(--border);border-radius:7px;
+  font-family:var(--mono);font-size:12px;color:var(--text-dim);background:var(--surface);
+}
+.len-row button.on{border-color:var(--accent);color:var(--accent);background:var(--surface-2);}
+
+/* ---------- study ---------- */
+.progress-track{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:20px;}
+.progress-fill{height:100%;background:var(--accent);width:0%;transition:width .3s ease;}
+
+.card-top{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  margin-bottom:18px;font-family:var(--mono);font-size:10.5px;
+}
+.topic-badge{
+  color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.counters{display:flex;gap:8px;flex:0 0 auto;color:var(--muted);}
+.counters .c-new{color:var(--easy);}
+.counters .c-due{color:var(--accent);}
+.counters .c-again{color:var(--again);}
+
+.card{
+  padding:34px 30px;min-height:290px;display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+}
+.q{
+  font-family:var(--serif);font-size:23px;line-height:1.42;font-weight:400;
+  letter-spacing:-0.01em;
+}
+.rule{
+  display:flex;align-items:center;gap:10px;margin:24px 0 18px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:0.14em;color:var(--accent-dim);
+}
+.rule::before,.rule::after{content:'';flex:1;height:1px;background:var(--border);}
+.a{font-size:14.5px;line-height:1.7;color:var(--text-dim);}
+.a b{color:var(--text);font-weight:600;}
+.a code{font-family:var(--mono);font-size:13px;color:var(--accent);}
+.reveal-hint{
+  margin-top:auto;padding-top:22px;text-align:center;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+}
+kbd{
+  background:var(--surface-2);border:1px solid var(--border-lit);border-radius:4px;
+  padding:2px 6px;font-family:var(--mono);font-size:10px;color:var(--accent);
+}
+
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.grades button{
+  padding:13px 6px;border-radius:9px;border:1px solid var(--border);
+  background:var(--surface);transition:all .12s;
+}
+.grades button:hover{background:var(--surface-2);}
+.g-label{font-size:13px;font-weight:600;margin-bottom:3px;}
+.g-when{font-family:var(--mono);font-size:10px;color:var(--muted);}
+#g1:hover{border-color:var(--again);} #g1 .g-label{color:var(--again);}
+#g2:hover{border-color:var(--hard);}  #g2 .g-label{color:var(--hard);}
+#g3:hover{border-color:var(--good);}  #g3 .g-label{color:var(--good);}
+#g4:hover{border-color:var(--easy);}  #g4 .g-label{color:var(--easy);}
+
+.study-foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
+
+/* ---------- summary ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:24px;}
+.stat{padding:18px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.stat .v{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;margin-bottom:5px;}
+.stat .k{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--surface-2);border:1px solid var(--border-lit);color:var(--text);
+  padding:11px 18px;border-radius:8px;font-family:var(--mono);font-size:12px;
+  transition:transform .25s ease;z-index:50;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:520px){
+  .q{font-size:19px;}
+  .card{padding:24px 20px;min-height:250px;}
+  .seg{flex-direction:column;}
+  .head-meta{display:none;}
+  .topic-stats .pill.tot{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">Re<span>call</span></div>
+    <div class="head-meta" id="headMeta"></div>
+  </header>
+
+  <!-- ============ SCREEN: LOAD ============ -->
+  <section id="screenLoad">
+    <div class="eyebrow">Step 1</div>
+    <h2 class="title">Load a deck</h2>
+    <p class="sub">Drop in a JSON file of flashcards. Nothing is uploaded anywhere — everything runs and stays in your browser.</p>
+
+    <div id="dropzone">
+      <div class="big">Drop your JSON here</div>
+      <div class="small">or click to browse</div>
+      <input type="file" id="fileInput" accept=".json,application/json" class="hidden">
+    </div>
+
+    <div class="schema">Expected shape — <b>topic</b> groups cards, everything else optional:
+
+{
+  "flashcards": [
+    { "topic": "...", "question": "...", "answer": "..." }
+  ]
+}
+
+Also accepts a bare array, and <b>lecture</b> / <b>chapter</b> / <b>category</b>
+as aliases for <b>topic</b>.</div>
+  </section>
+
+  <!-- ============ SCREEN: SETUP ============ -->
+  <section id="screenSetup" class="hidden">
+    <div class="eyebrow">Step 2</div>
+    <h2 class="title" id="setupTitle">Build a session</h2>
+    <p class="sub" id="setupSub"></p>
+
+    <div class="section">
+      <div class="select-all">
+        <div class="eyebrow" style="margin:0;">Topics</div>
+        <div>
+          <button class="mini-link" id="allOn">select all</button>
+          &nbsp;·&nbsp;
+          <button class="mini-link" id="allOff">none</button>
+        </div>
+      </div>
+      <div class="panel" id="topicList"></div>
+    </div>
+
+    <div class="section">
+      <div class="eyebrow">Mode</div>
+      <div class="seg">
+        <button id="modeReview" class="on">
+          <div class="m-name">Spaced review</div>
+          <div class="m-desc">Only cards that are due. Best for steady long-term retention.</div>
+        </button>
+        <button id="modeCram">
+          <div class="m-name">Cram</div>
+          <div class="m-desc">Everything selected, weakest first. Best right before an exam.</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="eyebrow">Session length</div>
+      <div class="len-row" id="lenRow">
+        <button data-len="10">10</button>
+        <button data-len="20" class="on">20</button>
+        <button data-len="40">40</button>
+        <button data-len="0">all</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <button class="btn" id="startBtn">Start session</button>
+      <button class="btn-ghost" id="newDeck">load a different deck</button>
+      <button class="btn-ghost" id="resetProg">reset progress</button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN: STUDY ============ -->
+  <section id="screenStudy" class="hidden">
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+
+    <div class="card-top">
+      <div class="topic-badge" id="topicBadge"></div>
+      <div class="counters" id="counters"></div>
+    </div>
+
+    <div class="card" id="cardEl">
+      <div class="q" id="qEl"></div>
+      <div id="aZone"></div>
+      <div class="reveal-hint" id="revealHint">click card or press <kbd>space</kbd> to reveal</div>
+    </div>
+
+    <div class="grades hidden" id="grades">
+      <button id="g1"><div class="g-label">Again</div><div class="g-when" id="w1"></div></button>
+      <button id="g2"><div class="g-label">Hard</div><div class="g-when" id="w2"></div></button>
+      <button id="g3"><div class="g-label">Good</div><div class="g-when" id="w3"></div></button>
+      <button id="g4"><div class="g-label">Easy</div><div class="g-when" id="w4"></div></button>
+    </div>
+
+    <div class="study-foot">
+      <span class="head-meta"><span id="cardMeta"></span></span>
+      <button class="btn-ghost" id="endBtn">end session</button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN: DONE ============ -->
+  <section id="screenDone" class="hidden">
+    <div class="eyebrow">Session complete</div>
+    <h2 class="title" id="doneTitle">Nice work.</h2>
+    <p class="sub" id="doneSub"></p>
+    <div class="stat-grid" id="statGrid"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn" id="againBtn">New session</button>
+      <button class="btn-ghost" id="exportBtn">export progress</button>
+    </div>
+  </section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   STORAGE  (localStorage, with graceful in-memory fallback)
+   ============================================================ */
+const LSKEY = 'recall_progress_v1';
+let memStore = null;
+function loadProgress(){
+  if(memStore) return memStore;
+  try{
+    const raw = localStorage.getItem(LSKEY);
+    memStore = raw ? JSON.parse(raw) : {};
+  }catch(e){ memStore = {}; }
+  return memStore;
+}
+function saveProgress(){
+  try{ localStorage.setItem(LSKEY, JSON.stringify(memStore)); }
+  catch(e){ /* private mode / sandbox: keep in memory only */ }
+}
+let progress = loadProgress();
+
+/* stable id from question text, so progress survives re-uploads & id changes */
+function hash(str){
+  let h = 5381;
+  for(let i=0;i<str.length;i++) h = ((h<<5)+h+str.charCodeAt(i))|0;
+  return 'c'+(h>>>0).toString(36);
+}
+
+/* ============================================================
+   SPACED REPETITION  (SM-2 derived, Anki-style 4-button grading)
+   ============================================================ */
+const DAY = 86400000, MIN = 60000;
+const fresh = () => ({reps:0, ease:2.5, ivl:0, due:0, lapses:0, seen:0});
+
+function getState(key){ return progress[key] ? {...fresh(), ...progress[key]} : fresh(); }
+
+function schedule(s, g){
+  const n = {...s};
+  n.seen++;
+  if(g===1){                                   // Again — lapse, relearn soon
+    n.reps = 0; n.lapses++;
+    n.ease = Math.max(1.3, n.ease - 0.20);
+    n.ivl  = 0;
+    n.due  = Date.now() + 10*MIN;
+  } else if(g===2){                             // Hard — small growth, ease down
+    n.ease = Math.max(1.3, n.ease - 0.15);
+    n.ivl  = n.ivl ? Math.max(1, n.ivl*1.2) : 1;
+    n.reps++;
+    n.due  = Date.now() + n.ivl*DAY;
+  } else if(g===3){                             // Good — standard SM-2 ladder
+    if(n.reps===0)      n.ivl = 1;
+    else if(n.reps===1) n.ivl = 6;
+    else                n.ivl = n.ivl * n.ease;
+    n.reps++;
+    n.due  = Date.now() + n.ivl*DAY;
+  } else {                                      // Easy — ease up, bonus interval
+    n.ease = Math.min(3.0, n.ease + 0.15);
+    if(n.reps===0)      n.ivl = 3;
+    else if(n.reps===1) n.ivl = 8;
+    else                n.ivl = n.ivl * n.ease * 1.3;
+    n.reps++;
+    n.due  = Date.now() + n.ivl*DAY;
+  }
+  n.ivl = Math.round(n.ivl*100)/100;
+  return n;
+}
+
+function fmtIvl(s, g){
+  const n = schedule(s, g);
+  if(g===1) return '10m';
+  const d = n.ivl;
+  if(d < 1)   return Math.round(d*24)+'h';
+  if(d < 30)  return Math.round(d)+'d';
+  if(d < 365) return (Math.round(d/30*10)/10)+'mo';
+  return (Math.round(d/365*10)/10)+'y';
+}
+
+/* weakness score for cram ordering: never-seen and lapsed float to the top */
+function weakness(s){
+  if(s.seen===0) return 100;
+  let w = 40 - (s.reps*4) - ((s.ease-1.3)*10) + (s.lapses*12);
+  const overdue = (Date.now() - s.due)/DAY;
+  if(overdue > 0) w += Math.min(20, overdue*2);
+  return Math.max(1, w);
+}
+
+/* ============================================================
+   DECK
+   ============================================================ */
+let DECK = [];           // {key, topic, question, answer}
+let selected = new Set();
+let mode = 'review';
+let sessLen = 20;
+
+const TOPIC_KEYS = ['topic','lecture','chapter','category','subject','section'];
+
+function parseDeck(raw){
+  let arr = null;
+  if(Array.isArray(raw)) arr = raw;
+  else if(raw && typeof raw === 'object'){
+    for(const k of ['flashcards','cards','items','data']){
+      if(Array.isArray(raw[k])){ arr = raw[k]; break; }
+    }
+  }
+  if(!arr) throw new Error('No card array found. Expected {"flashcards":[...]} or a bare array.');
+
+  const out = [];
+  arr.forEach(c => {
+    if(!c || typeof c !== 'object') return;
+    const q = c.question ?? c.q ?? c.front ?? c.prompt;
+    const a = c.answer   ?? c.a ?? c.back  ?? c.response;
+    if(!q || !a) return;
+    let t = 'Uncategorised';
+    for(const k of TOPIC_KEYS){ if(c[k]){ t = String(c[k]); break; } }
+    out.push({ key: hash(String(q)), topic: t, question: String(q), answer: String(a) });
+  });
+  if(!out.length) throw new Error('Found the array, but no card had both a question and an answer.');
+  return out;
+}
+
+function topicsOf(deck){
+  const m = new Map();
+  deck.forEach(c => {
+    if(!m.has(c.topic)) m.set(c.topic, []);
+    m.get(c.topic).push(c);
+  });
+  return m;
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+const S = {
+  load : document.getElementById('screenLoad'),
+  setup: document.getElementById('screenSetup'),
+  study: document.getElementById('screenStudy'),
+  done : document.getElementById('screenDone'),
+};
+function show(name){
+  Object.entries(S).forEach(([k,el]) => el.classList.toggle('hidden', k !== name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function esc(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function fmt(s){
+  return esc(s)
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/\n/g,'<br>');
+}
+
+/* ---------- load screen ---------- */
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+dz.addEventListener('click', ()=>fi.click());
+dz.addEventListener('dragover', e=>{e.preventDefault();dz.classList.add('over');});
+dz.addEventListener('dragleave', ()=>dz.classList.remove('over'));
+dz.addEventListener('drop', e=>{
+  e.preventDefault(); dz.classList.remove('over');
+  if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+});
+fi.addEventListener('change', e=>{ if(e.target.files[0]) readFile(e.target.files[0]); });
+
+function readFile(file){
+  const r = new FileReader();
+  r.onload = () => { try{ ingest(JSON.parse(r.result)); } catch(err){ toast('✕ '+err.message); } };
+  r.onerror = () => toast('✕ Could not read that file');
+  r.readAsText(file);
+}
+
+function ingest(raw){
+  DECK = parseDeck(raw);
+  selected = new Set(topicsOf(DECK).keys());
+  renderSetup();
+  show('setup');
+}
+
+/* ---------- setup screen ---------- */
+function renderSetup(){
+  const map = topicsOf(DECK);
+  const now = Date.now();
+
+  document.getElementById('headMeta').innerHTML =
+    `<span><b>${DECK.length}</b> cards</span><span><b>${map.size}</b> topics</span>`;
+  document.getElementById('setupSub').textContent =
+    `${DECK.length} cards across ${map.size} topics. Pick what to include, then choose how you want to be tested.`;
+
+  const list = document.getElementById('topicList');
+  list.innerHTML = '';
+  [...map.entries()].forEach(([topic, cards]) => {
+    const due = cards.filter(c => { const s=getState(c.key); return s.seen>0 && s.due<=now; }).length;
+    const nw  = cards.filter(c => getState(c.key).seen===0).length;
+    const row = document.createElement('div');
+    row.className = 'topic-row' + (selected.has(topic) ? ' on' : '');
+    row.innerHTML = `
+      <div class="tick"><svg viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#191712" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="topic-name">${esc(topic)}</div>
+      <div class="topic-stats">
+        ${nw  ? `<span class="pill new">${nw} new</span>` : ''}
+        ${due ? `<span class="pill due">${due} due</span>` : ''}
+        <span class="pill tot">${cards.length}</span>
+      </div>`;
+    row.addEventListener('click', ()=>{
+      selected.has(topic) ? selected.delete(topic) : selected.add(topic);
+      row.classList.toggle('on');
+      refreshStart();
+    });
+    list.appendChild(row);
+  });
+  refreshStart();
+}
+
+function pool(){
+  const now = Date.now();
+  let p = DECK.filter(c => selected.has(c.topic));
+  if(mode === 'review') p = p.filter(c => { const s = getState(c.key); return s.seen===0 || s.due <= now; });
+  return p;
+}
+function refreshStart(){
+  const n = pool().length;
+  const b = document.getElementById('startBtn');
+  b.disabled = n === 0;
+  b.textContent = n === 0
+    ? (mode==='review' ? 'Nothing due right now' : 'Select a topic')
+    : `Start session · ${sessLen ? Math.min(sessLen,n) : n} cards`;
+}
+
+document.getElementById('allOn').onclick  = ()=>{ selected = new Set(topicsOf(DECK).keys()); renderSetup(); };
+document.getElementById('allOff').onclick = ()=>{ selected = new Set(); renderSetup(); };
+document.getElementById('modeReview').onclick = ()=>{
+  mode='review';
+  document.getElementById('modeReview').classList.add('on');
+  document.getElementById('modeCram').classList.remove('on');
+  refreshStart();
+};
+document.getElementById('modeCram').onclick = ()=>{
+  mode='cram';
+  document.getElementById('modeCram').classList.add('on');
+  document.getElementById('modeReview').classList.remove('on');
+  refreshStart();
+};
+document.getElementById('lenRow').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  sessLen = +b.dataset.len;
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on', x===b));
+  refreshStart();
+});
+document.getElementById('newDeck').onclick = ()=>show('load');
+document.getElementById('resetProg').onclick = ()=>{
+  if(!confirm('Reset all scheduling data for every deck? This cannot be undone.')) return;
+  memStore = {}; progress = memStore; saveProgress();
+  renderSetup(); toast('progress reset');
+};
+
+/* ============================================================
+   SESSION
+   ============================================================ */
+let queue = [], stats = null, cur = null, revealed = false;
+
+function buildQueue(){
+  let p = pool();
+  if(mode === 'review'){
+    p.sort((a,b)=>{
+      const sa=getState(a.key), sb=getState(b.key);
+      if(sa.seen===0 && sb.seen!==0) return -1;
+      if(sb.seen===0 && sa.seen!==0) return 1;
+      return sa.due - sb.due;
+    });
+    // interleave topics so you don't get 20 cards from one chapter in a row
+    p = interleave(p);
+  } else {
+    // weighted shuffle: weakest cards more likely to surface early
+    p = p.map(c => ({c, r: Math.random() * weakness(getState(c.key))}))
+         .sort((a,b)=>b.r-a.r).map(x=>x.c);
+    p = interleave(p);
+  }
+  return sessLen ? p.slice(0, sessLen) : p;
+}
+/* round-robin across topics — interleaving beats blocking for retention */
+function interleave(cards){
+  const by = new Map();
+  cards.forEach(c => { if(!by.has(c.topic)) by.set(c.topic, []); by.get(c.topic).push(c); });
+  const lanes = [...by.values()], out = [];
+  let i = 0;
+  while(out.length < cards.length){
+    const lane = lanes[i % lanes.length];
+    if(lane.length) out.push(lane.shift());
+    i++;
+    if(lanes.every(l => !l.length)) break;
+  }
+  return out;
+}
+
+function startSession(){
+  queue = buildQueue();
+  if(!queue.length) return;
+  stats = {total: queue.length, done: 0, again: 0, good: 0, start: Date.now(), newSeen: 0};
+  show('study');
+  next();
+}
+
+function next(){
+  if(!queue.length){ finish(); return; }
+  cur = queue.shift();
+  revealed = false;
+
+  const st = getState(cur.key);
+  document.getElementById('topicBadge').textContent = cur.topic;
+  document.getElementById('qEl').innerHTML = fmt(cur.question);
+  document.getElementById('aZone').innerHTML = '';
+  document.getElementById('revealHint').classList.remove('hidden');
+  document.getElementById('grades').classList.add('hidden');
+
+  const remain = queue.length + 1;
+  document.getElementById('counters').innerHTML =
+    `<span class="${st.seen===0?'c-new':(st.lapses?'c-again':'c-due')}">${st.seen===0?'new':(st.reps===0?'learning':'review')}</span>` +
+    `<span>${remain} left</span>`;
+  document.getElementById('cardMeta').textContent =
+    st.seen===0 ? 'first time seeing this card'
+                : `seen ${st.seen}× · ease ${st.ease.toFixed(2)} · ${st.lapses} lapse${st.lapses===1?'':'s'}`;
+  document.getElementById('progFill').style.width =
+    (stats.done / stats.total * 100) + '%';
+}
+
+function reveal(){
+  if(revealed || !cur) return;
+  revealed = true;
+  document.getElementById('aZone').innerHTML =
+    `<div class="rule">ANSWER</div><div class="a">${fmt(cur.answer)}</div>`;
+  document.getElementById('revealHint').classList.add('hidden');
+  document.getElementById('grades').classList.remove('hidden');
+  const st = getState(cur.key);
+  for(let g=1; g<=4; g++) document.getElementById('w'+g).textContent = fmtIvl(st, g);
+}
+
+function grade(g){
+  if(!revealed || !cur) return;
+  const st = getState(cur.key);
+  if(st.seen === 0) stats.newSeen++;
+  progress[cur.key] = schedule(st, g);
+  saveProgress();
+
+  stats.done++;
+  if(g === 1){
+    stats.again++;
+    // failed cards come back later in the same session — the single highest-value habit
+    const at = Math.min(queue.length, 4 + Math.floor(Math.random()*3));
+    queue.splice(at, 0, cur);
+    stats.total++;
+  } else {
+    stats.good++;
+  }
+  next();
+}
+
+function finish(){
+  show('done');
+  const mins = Math.max(1, Math.round((Date.now() - stats.start)/60000));
+  const acc  = stats.done ? Math.round(stats.good / stats.done * 100) : 0;
+  document.getElementById('doneTitle').textContent =
+    acc >= 85 ? 'Sharp.' : acc >= 60 ? 'Solid progress.' : 'Good — that was the hard stuff.';
+  document.getElementById('doneSub').textContent =
+    mode === 'cram'
+      ? 'Cards you marked Again were re-queued during the session and are scheduled to come back soon.'
+      : 'Scheduling updated. Come back when cards are due — spacing is what makes it stick.';
+  document.getElementById('statGrid').innerHTML = `
+    <div class="stat"><div class="v">${stats.done}</div><div class="k">reviewed</div></div>
+    <div class="stat"><div class="v">${acc}%</div><div class="k">recalled</div></div>
+    <div class="stat"><div class="v">${stats.newSeen}</div><div class="k">new cards</div></div>
+    <div class="stat"><div class="v">${mins}m</div><div class="k">time</div></div>`;
+}
+
+/* ---------- wiring ---------- */
+document.getElementById('startBtn').onclick = startSession;
+document.getElementById('cardEl').onclick   = reveal;
+document.getElementById('endBtn').onclick   = finish;
+document.getElementById('againBtn').onclick = ()=>{ renderSetup(); show('setup'); };
+for(let g=1; g<=4; g++) document.getElementById('g'+g).onclick = ()=>grade(g);
+
+document.getElementById('exportBtn').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(progress,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'recall-progress.json';
+  a.click();
+  toast('progress exported');
+};
+
+document.addEventListener('keydown', e=>{
+  if(S.study.classList.contains('hidden')) return;
+  if(e.code === 'Space'){ e.preventDefault(); reveal(); }
+  else if(['1','2','3','4'].includes(e.key)) grade(+e.key);
+  else if(e.key === 'Escape') finish();
+});
+
+/* ---------- auto-load cards.json if it sits next to index.html ---------- */
+(async function(){
+  try{
+    const res = await fetch('./cards.json', {cache:'no-store'});
+    if(!res.ok) return;
+    ingest(await res.json());
+    toast('loaded cards.json');
+  }catch(e){ /* no bundled deck — the upload screen is already showing */ }
+})();
+</script>
+</body>
+</html>

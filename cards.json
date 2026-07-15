@@ -1,0 +1,1038 @@
+{
+  "deck_title": "Cloud Computing (Casalicchio, Sapienza) - Lecture Slide Flashcards",
+  "note": "Expanded to an exhaustive set per lecture for self-examination. Source docs for 'Lecture 2' were labeled inconsistently (both Containerization and Distributed Systems/SOA slides say Lecture 2); ordered here by logical course progression.",
+  "flashcards": [
+    {
+      "id": 1,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Who first proposed, in 1961, that computing could become a public utility like electricity or the telephone system?",
+      "answer": "John McCarthy (Stanford University), inventor of LISP."
+    },
+    {
+      "id": 2,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "According to NIST SP 800-145, what is cloud computing?",
+      "answer": "A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (networks, servers, storage, applications, services) that can be rapidly provisioned and released with minimal management effort or service provider interaction."
+    },
+    {
+      "id": 3,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What does 'ubiquitous' mean in the NIST cloud definition, and what discussion question does the lecture raise about it?",
+      "answer": "Server and data can be located anywhere and accessed from anywhere. The lecture raises whether consumers should have control over data location, and whether the distance between customer and server/data affects perceived performance or quality of experience."
+    },
+    {
+      "id": 4,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "List the 5 essential characteristics of cloud computing per NIST.",
+      "answer": "On-demand self-service, broad network access, resource pooling, rapid elasticity, measured service."
+    },
+    {
+      "id": 5,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What interfaces enable on-demand self-service in practice, per the lecture's examples?",
+      "answer": "Web interfaces (OpenStack, AWS, Google Cloud consoles), dedicated shells (e.g. AWS shell), and programming APIs/SDKs (AWS SDK for Java, Python, .NET, Ruby, Go, etc.)."
+    },
+    {
+      "id": 6,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Define horizontal and vertical scaling, including their two sub-directions each.",
+      "answer": "Horizontal scaling: scaling out (add instances) / scaling in (remove instances). Vertical scaling: scaling up (increase capacity of a single resource) / scaling down (decrease it)."
+    },
+    {
+      "id": 7,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "How does the lecture define elasticity (citing 'Elasticity in Cloud Computing: What It Is, and What It Is Not')?",
+      "answer": "The degree to which a system is able to adapt to workload changes by provisioning and deprovisioning resources in an automatic manner, such that at each point in time the available resources match the current demand as closely as possible."
+    },
+    {
+      "id": 8,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "In the AWS EC2 example, why isn't manually adding VM instances enough to satisfy 'rapid elasticity'?",
+      "answer": "Manually adding VMs means you can scale, but you cannot rapidly follow demand. Rapid elasticity requires automatism, e.g. continuously monitoring CPU usage and automatically adding a VM when a threshold is breached (e.g. CPU usage above 70% for 1 minute)."
+    },
+    {
+      "id": 9,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What does 'measured service' require a cloud provider to guarantee, beyond simple billing?",
+      "answer": "A Service Level Agreement (SLA), e.g. 99.9% uptime, a guaranteed bandwidth, or a guaranteed CPU share - which in turn requires measurement/monitoring capability for both proper billing and SLA management."
+    },
+    {
+      "id": 10,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Give three examples of resiliency mechanisms the lecture connects to measured/monitored services.",
+      "answer": "AWS Elastic Load Balancer (automatically excludes a down node from the pool), AWS Autoscaling (maintains a configured minimum number of servers despite failures), and container orchestration like Kubernetes/Swarm (maintains a desired number of containers running despite failures)."
+    },
+    {
+      "id": 11,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "How does control, required expertise, and ease of use change as you move from IaaS to SaaS?",
+      "answer": "Consumer control over the underlying resources decreases, the expertise needed to manage the service decreases, and ease of use increases."
+    },
+    {
+      "id": 12,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "In the shared-responsibility security model, what is the cloud provider responsible for vs. the customer?",
+      "answer": "Provider: physical security of data centers, hardware/software infrastructure (storage decommissioning, OS access logging/auditing), network infrastructure (intrusion detection), virtualization infrastructure (instance isolation). Customer: guest OS patching/maintenance, applications, passwords/role-based access, OS/host-based firewalls (intrusion detection/prevention), network configuration, account management, and login/permission settings per user."
+    },
+    {
+      "id": 13,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What are the three NIST SP 500-322 worksheets, and what does each verify?",
+      "answer": "Cloud Service Worksheet (is it a cloud service at all, based on the 5 essential characteristics), Cloud Service Model Worksheet (which service model - IaaS/PaaS/SaaS), Cloud Deployment Model Worksheet (which deployment model)."
+    },
+    {
+      "id": 14,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "List the 5 actor roles in the NIST SP 500-292 Cloud Reference Architecture, and the 3 sub-categories of Cloud Broker activity.",
+      "answer": "Roles: Cloud Consumer, Cloud Provider, Cloud Auditor, Cloud Broker, Cloud Carrier. Cloud Broker activities: Service Intermediation (improving/adding value to a capability), Service Aggregation (combining/integrating services into a new one), Service Arbitrage (dynamic aggregation)."
+    },
+    {
+      "id": 15,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "In the Service Orchestration diagram, what type of orchestration is mapped to each of SaaS, PaaS, and IaaS?",
+      "answer": "SaaS orchestration = service orchestration (e.g. microservices and SOA); PaaS orchestration = container orchestration (e.g. Kubernetes); IaaS orchestration = VM / virtual device orchestration - all sitting above the physical layer."
+    },
+    {
+      "id": 16,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What did Leonard Kleinrock (ARPANET project) predict in 1969?",
+      "answer": "That computer networks, still in their infancy, would grow into 'computer utilities' serving individual homes and offices, much like electric and telephone utilities."
+    },
+    {
+      "id": 17,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Trace the technological evolution the lecture identifies leading up to cloud computing.",
+      "answer": "Mainframe (1950-70) -> Distributed Systems (1970-80) -> Cluster Computing (1980-90) -> Grid Computing (1990-2000) -> Utility Computing (late 1990s-2000) -> Virtualization / Web 2.0-3.0-4.0 / Service Orientation (2000-present) -> AWS EC2/S3 (2005/6)."
+    },
+    {
+      "id": 18,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What did Amazon launch in 2005/2006, and who drove it?",
+      "answer": "Jeff Bezos drove Amazon's launch of Elastic Compute Cloud (EC2) and Simple Storage Service (S3), letting users rent data storage and compute server time like a utility."
+    },
+    {
+      "id": 19,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What three things is the NIST cloud model composed of, beyond the definition itself?",
+      "answer": "Five essential characteristics, three service models, and four deployment models."
+    },
+    {
+      "id": 20,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What are Options A and B for satisfying on-demand self-service, and what distinguishes them?",
+      "answer": "Option A: fully automated service provisioning. Option B: the provider uses an automated interface for the consumer to request/track the service, but the provider may still use manual labor behind the scenes to actually provision it."
+    },
+    {
+      "id": 21,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Per NIST, what does resource pooling require regarding dynamic assignment and location knowledge?",
+      "answer": "Different physical and virtual resources are dynamically assigned and reassigned according to consumer demand; there is generally no control or knowledge of the exact resource location, though the consumer may specify location at a higher abstraction level (e.g. country, state, or datacenter)."
+    },
+    {
+      "id": 22,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "List the properties a multitenant application needs to isolate or guarantee.",
+      "answer": "Usage isolation (performance and availability), data security, recovery from failures, application upgrades, scalability, metered usage, data tier isolation."
+    },
+    {
+      "id": 23,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Give four examples the lecture uses to motivate why rapid elasticity matters.",
+      "answer": "Any four of: an e-commerce site during Black Friday week, a newspaper site during breaking news, large-scale events (Olympics, World Cup), and entertainment applications (online games, music/movie streaming)."
+    },
+    {
+      "id": 24,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "In the lecture's AWS pricing example, how do a t2.small and an m4.large instance compare?",
+      "answer": "t2.small: 1 variable CPU (ECU), 2GB RAM, $0.023/hour. m4.large: 2 CPUs, 6.5 ECU, 8GB RAM, $0.1/hour."
+    },
+    {
+      "id": 25,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "In the SLA credit example, what service credit does a provider owe for monthly uptime between 99.0% and 99.95%?",
+      "answer": "A 10% service credit."
+    },
+    {
+      "id": 26,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "How does the lecture define resiliency?",
+      "answer": "The ability to provide and maintain an acceptable level of service in the face of faults and challenges to normal operation."
+    },
+    {
+      "id": 27,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "Describe the level of consumer control in each service model: IaaS, PaaS, SaaS.",
+      "answer": "IaaS: control over operating systems, storage, and deployed applications, with possibly limited control of select networking components. PaaS: control over deployed applications and possibly configuration settings for the application-hosting environment. SaaS: control only over user-specific application configuration settings."
+    },
+    {
+      "id": 28,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What is a Virtual Private Cloud (VPC), and how do different providers' offerings differ?",
+      "answer": "A private-cloud-like environment carved out inside a public cloud. Amazon VPC and Google Cloud VPC focus on providing VPN features to connect your resources; providers like IBM and HP instead offer clouds with greater physical isolation."
+    },
+    {
+      "id": 29,
+      "topic": "Lecture 1 - Cloud Computing Definition & NIST Reference Architecture",
+      "question": "What does Cloud Service Management encompass, per the NIST reference architecture?",
+      "answer": "All of the service-related functions necessary for the management and operation of the services required by, or proposed to, cloud consumers."
+    },
+    {
+      "id": 30,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Give Tanenbaum's and Coulouris's definitions of a distributed system, and what each emphasizes.",
+      "answer": "Tanenbaum: 'a collection of independent computers that appears to its users as a single coherent system' - emphasizes unified usage and aggregation of resources. Coulouris: components at networked computers 'communicate and coordinate their actions only by passing messages' - emphasizes the networked nature and message-passing communication."
+    },
+    {
+      "id": 31,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What is distributed computing, as distinct from a distributed system?",
+      "answer": "A computational model that defines how computation is carried out: the computation is broken into units executed concurrently on different computing elements (cores in the same processor, processors on the same computer, or processors on different nodes)."
+    },
+    {
+      "id": 32,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What does a software architectural style define?",
+      "answer": "The different roles of components in the distributed system, how components are distributed across multiple machines, and what connectors/communication mechanisms are used - essentially a family of systems sharing a structural pattern, a vocabulary of components/connectors, and constraints on how they combine."
+    },
+    {
+      "id": 33,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What is the lecture's example of the pipe-and-filter architectural style?",
+      "answer": "The MapReduce paradigm - e.g. a word-count job that can be distributed across map and reduce stages."
+    },
+    {
+      "id": 34,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What distinguishes event-based systems from plain communicating-processes systems?",
+      "answer": "Components are loosely coupled and connected via an event/message broker; each component publishes a collection of events that other components can subscribe to, and the subscriber provides a callback executed when the event fires - this fosters open systems, since any component with a compliant interface can be integrated."
+    },
+    {
+      "id": 35,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Differentiate the thin-client and fat-client models in client/server architecture.",
+      "answer": "Thin-client: the server holds application logic and data storage, the client only handles presentation. Fat-client: the server holds only data storage, the client handles presentation plus application logic."
+    },
+    {
+      "id": 36,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Why does the two-tier client/server model suffer from scalability issues compared to three-tier/N-tier?",
+      "answer": "Two-tier is suitable only for systems of limited size because everything runs on essentially two nodes. Three-tier/N-tier is more scalable because the conceptual tiers can be distributed across several computing nodes, which also lets performance bottlenecks be isolated."
+    },
+    {
+      "id": 37,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "List the 4 defining characteristics of a service in SOA.",
+      "answer": "Explicit boundaries (minimal interfaces to foster reuse and simplify interaction), autonomy (can be integrated in different systems at once, handles its own failures), shared schema and contracts (describing message structure/order, machine-checkable structural compatibility), and semantic compatibility determined by policy (capability/requirement expressions that must hold true)."
+    },
+    {
+      "id": 38,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Describe the 4-step interaction sequence between the three SOA roles: service consumer, service provider, service registry.",
+      "answer": "1) The service consumer discovers a service in the service registry. 2) The registry returns binding information. 3) The consumer and provider establish a connection using that binding information. 4) The consumer uses the service."
+    },
+    {
+      "id": 39,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "List SOA's main features/benefits per the lecture.",
+      "answer": "Service re-use, message monitoring/control/transformation, complex event processing, service composition, service discovery."
+    },
+    {
+      "id": 40,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Give the lecture's own examples of orchestration and of choreography.",
+      "answer": "Orchestration: a travel planner or a flight/train/event ticket reservation system, where one centralized workflow invokes steps like select-destination, display-hotels, select-hotel (or select-dates, display-options, select-flight, select-ticket-class). Choreography: an online credit-card payment (Seller Transaction Service exchanges messages with the Credit Card company Service) and an authentication flow (Client Service and Auth Service exchange requests, including an optional three-factor-auth step) - independent services coordinating via message exchange with no central controller."
+    },
+    {
+      "id": 41,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Name the three axes of the microservices 'scale cube' and what each represents.",
+      "answer": "X-axis scaling = horizontal duplication (running more instances of the same thing); Y-axis scaling = functional decomposition (splitting a monolith into microservices); Z-axis scaling = data partitioning (splitting data into partitions/shards)."
+    },
+    {
+      "id": 42,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What is a 'bounded context' in the microservices share-as-little-as-possible style, and what tradeoff does it introduce?",
+      "answer": "The coupling of a component/service and its associated data into a single, self-contained closed unit with minimal dependencies, exposing only a well-defined interface and contract. It can violate the Don't-Repeat-Yourself principle, but makes services easier to maintain, evolve, and deploy with fewer side effects on the rest of the application."
+    },
+    {
+      "id": 43,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Compare SOA and microservices on the 'Middleware and API Layer' dimension.",
+      "answer": "SOA relies on messaging middleware (an integration bus) to coordinate service calls, providing mediation/routing, message enhancement/transformation, and protocol transformation. Microservices don't use messaging middleware at all; instead they expose an API layer as a service-access facade, hiding actual endpoint locations from consumers and allowing service granularity to change without impacting consumers."
+    },
+    {
+      "id": 44,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Compare SOA and microservices on 'Application Scope' and 'Heterogeneous Interoperability'.",
+      "answer": "Application scope: SOA suits large, complex, enterprise-wide systems integrating many heterogeneous applications with shared components; microservices suit smaller, well-partitioned, web-based systems. Interoperability: SOA has no upper limit on protocol diversity thanks to its middleware; microservices deliberately narrow the integration choices (mainly REST and simple messaging) to keep the architecture simpler."
+    },
+    {
+      "id": 45,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "How is cloud computing positioned relative to distributed computing in the lecture?",
+      "answer": "Cloud computing is a specialized form of distributed computing that introduces utilization models for remotely provisioning scalable and measured resources."
+    },
+    {
+      "id": 46,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What two properties does the lecture say 'distributed' often implies about the computing elements?",
+      "answer": "Different physical locations of the computing elements, and heterogeneity in terms of hardware and software features."
+    },
+    {
+      "id": 47,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Describe the peer-to-peer (P2P) architectural style and where it's used.",
+      "answer": "A symmetric architecture where all components (peers) play the same role, incorporating both client and server capabilities. It suits highly decentralized architectures and scales better along the dimension of number of peers; used in file-sharing applications and distributed/cloud storage systems."
+    },
+    {
+      "id": 48,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What IPC mechanisms does the 'communicating processes' style rely on for coordination?",
+      "answer": "Remote Procedure Call (RPC), Web Services, REST, and Distributed Objects (DO); each process provides services and can also use services exposed by other processes."
+    },
+    {
+      "id": 49,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "How does the lecture define a 'service' in SOA, as distinct from a service's 4 characteristics?",
+      "answer": "A logical representation of a repeatable business activity with a specified outcome (e.g. check customer credit, provide weather data); it is self-contained, may be composed of other services, and appears as a black box to its consumers."
+    },
+    {
+      "id": 50,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Give the full definition of a microservice architecture (5 properties).",
+      "answer": "An architectural style that structures an application as a collection of services that are: highly maintainable and testable, loosely coupled, independently deployable, organized around business capabilities, and owned by a small team."
+    },
+    {
+      "id": 51,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "List the pros and cons of a monolithic architecture.",
+      "answer": "Pros: simple to develop and make radical changes, straightforward to test and deploy, easy to scale (though only horizontally, and limited since the shared database becomes a bottleneck and all functionality gets replicated). Cons: as complexity increases and technologies evolve, development, testing, deployment, and scaling all become much more difficult."
+    },
+    {
+      "id": 52,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Describe the SOA vs microservices taxonomy diagram: what sits between a client request and the functional/infrastructure service in each style?",
+      "answer": "Microservices: client requests -> API layer -> functional service, connected to an infrastructure service (e.g. Auth, Login, Monitoring). SOA: business services -> messaging middleware -> enterprise services -> application services, connected to infrastructure services."
+    },
+    {
+      "id": 53,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Compare SOA and microservices on 'Service Ownership and Coordination.'",
+      "answer": "Microservices need little to no coordination among teams (each team owns its service end-to-end). SOA typically requires a high coordination effort among teams."
+    },
+    {
+      "id": 54,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "Compare SOA and microservices on 'Service Granularity,' and what does granularity impact?",
+      "answer": "Microservices components are generally single-purpose, specialized services; SOA components can range from small application services to very large enterprise services (even entire subsystems). Granularity impacts performance and transaction management (ACID vs BASE)."
+    },
+    {
+      "id": 55,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What is the 'share-as-much-as-possible' architectural style, which style uses it, and what risk does it create?",
+      "answer": "SOA follows a share-as-much-as-possible style (contrasted with isolated 'Silos'). This leads to tightly coupled components and increases the overall risk associated with change."
+    },
+    {
+      "id": 56,
+      "topic": "Lecture 2 - Enabling Technologies: Distributed Systems, SOA & Microservices",
+      "question": "What review questions does the lecture explicitly pose about microservices vs monolithic architectures?",
+      "answer": "'What are the advantages of using microservices with respect to monolithic architectures?' and 'Comment on the benefits and drawbacks of microservices' - i.e. be ready to argue both the gains (independent deployability, scalability, fault isolation, technology flexibility) and the costs (operational complexity, distributed-system failure modes, data consistency challenges)."
+    },
+    {
+      "id": 57,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "What are the three foundational Linux kernel mechanisms containerization is built on, and what does each control?",
+      "answer": "Namespaces (what a process can see and use - isolation), Cgroups (how much of a resource a process can use - limiting, prioritization, accounting), UnionFS (merging multiple physically separate filesystems into one logical view)."
+    },
+    {
+      "id": 58,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Contrast application containers and system containers.",
+      "answer": "Application containers hold a single process, use a layered filesystem, run microservices/applications, and are used for distributing applications (e.g. Docker, CRI-O). System containers hold an entire operating system, are filesystem-neutral, run like a lightweight VM, and are used for providing underlying infrastructure (e.g. LXC/LXD, OpenVZ/Virtuozzo, BSD jails, Linux vServer)."
+    },
+    {
+      "id": 59,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "What Unix mechanism is containerization an evolution of, and what replaced it in modern container runtimes?",
+      "answer": "The chroot operation, which changes the filesystem root directory for a process and its children, isolating them from the rest of the filesystem. Modern container runtimes no longer use chroot; it was replaced by pivot_root(2)."
+    },
+    {
+      "id": 60,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Name the 7 kinds of global system resources a Linux namespace can wrap.",
+      "answer": "Cgroup (root directory), IPC (System V IPC / POSIX message queues), Network (devices, stacks, ports), Mount (mount points), PID (process IDs), User (user and group IDs), UTS (hostname and NIS domain name)."
+    },
+    {
+      "id": 61,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Which system calls create, join, and move a process into a namespace?",
+      "answer": "clone() creates one or more new namespaces for a newly created process; setns() lets a process join an already-existing namespace; unshare() moves a process's own context into a new namespace."
+    },
+    {
+      "id": 62,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "What is the goal of cgroups, and how does the kernel expose the cgroup interface?",
+      "answer": "Resource limiting, prioritization, accounting, and controlling, by organizing processes into hierarchical groups. The kernel exposes this through a pseudo-filesystem called cgroupfs."
+    },
+    {
+      "id": 63,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "In UnionFS, what happens if the same file exists in two branches with different precedence?",
+      "answer": "The unioned view shows the contents and attributes of the file from the higher-priority branch; the file in the lower-priority branch is ignored. (For directories that exist in both branches, the union instead merges their contents and attributes, with duplicate entries automatically removed.)"
+    },
+    {
+      "id": 64,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "How does UnionFS let you effectively 'write' to a read-only branch, such as a mounted CD-ROM?",
+      "answer": "Via copy-on-write unions: a read-write branch is unioned on top of the read-only one. When a read-only file is opened for writing, it is first copied up ('copyup') to the higher-priority read-write branch, and all subsequent writes happen there, leaving the original read-only branch untouched."
+    },
+    {
+      "id": 65,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Describe Docker's client/server architecture and how the pieces communicate.",
+      "answer": "The Docker engine is a client/server application: the CLI (client) interacts with the Docker daemon (server) via the Docker REST API, which can also be called directly by applications. The daemon is the component that actually creates and manages Docker objects (images, containers, networks, volumes)."
+    },
+    {
+      "id": 66,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Walk through what 'docker run -i -t ubuntu /bin/bash' actually does.",
+      "answer": "Locates (and downloads if not already local) the ubuntu image, creates a new container, allocates a read/write filesystem as the container's final (top) layer isolated from the host filesystem, creates a network interface connected to the default network, then starts the container and runs /bin/bash."
+    },
+    {
+      "id": 67,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "What is the key limitation of the Docker 'container writable layer' storage option?",
+      "answer": "It does not persist once the container is terminated, is tightly coupled to the specific host it runs on (reduced portability), and offers reduced performance."
+    },
+    {
+      "id": 68,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Give two advantages of Docker volumes over bind mounts.",
+      "answer": "Any two of: easier to back up or migrate; can be more safely shared among multiple containers; volume drivers allow storing on remote hosts/cloud providers or encrypting the content; work on both Linux and Windows containers; can be pre-populated with content by a container. (Tradeoff: volumes must be accessed via Docker CLI/API, not like a normal filesystem.)"
+    },
+    {
+      "id": 69,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "When would you specifically choose a bind mount over a volume?",
+      "answer": "To share configuration files, source code, or build artifacts between a development environment on the Docker host and a container, or whenever the host's directory/file structure is guaranteed to be consistent with what the container needs. Bind mounts reference a path directly on the host and are shared with host processes, at the cost of portability (they depend on the host filesystem)."
+    },
+    {
+      "id": 70,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "What is unique and limiting about tmpfs mounts?",
+      "answer": "They are an area of host memory (outside the container's writable layer) that is temporary and removed when the container stops; available only on Linux hosts and not shareable among containers - used when data should not persist anywhere (e.g. security reasons) or to handle large volumes of non-persistent data with high performance."
+    },
+    {
+      "id": 71,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Match each Docker network driver (bridge, host, overlay, macvlan) to its use case.",
+      "answer": "Bridge: the default driver, used when standalone containers on the same Docker host need to communicate. Host: removes network isolation between container and host, used when the container should use the host's networking directly. Overlay: connects multiple Docker daemons/hosts together (e.g. swarm services communicating across hosts), removing the need for OS-level routing between them. Macvlan: assigns the container its own MAC address so it appears as a physical device on the network - useful for legacy applications expecting direct physical network connection."
+    },
+    {
+      "id": 72,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "How does the lecture define containerization at a technical level?",
+      "answer": "Operating-system-level virtualization that leverages multiprogramming techniques at the OS level; there is no virtual machine manager or hypervisor and no hardware emulation - containers share the same host OS, built on namespaces, cgroups, and UnionFS."
+    },
+    {
+      "id": 73,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Distinguish a Docker image from a Docker container.",
+      "answer": "An image is a read-only template with instructions for creating a container, organized in layers (defined by a Dockerfile). A container is a runnable instance of an image, managed via the CLI or the Docker API."
+    },
+    {
+      "id": 74,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "In the layers example, what do FROM, COPY, RUN, and CMD each do when building the 'app' image on top of 'ubuntu'?",
+      "answer": "FROM ubuntu:15.04 sets the base layer; COPY . /app copies local files into the image; RUN make /app executes a build command as a new layer; CMD python /app/app.py specifies the command to run when a container starts from the image."
+    },
+    {
+      "id": 75,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Can a Docker volume be mounted into more than one container at a time, and in what access modes?",
+      "answer": "Yes - a volume can be mounted into multiple containers simultaneously, either read/write or read-only."
+    },
+    {
+      "id": 76,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Match the storage option to each activity: (a) backup/restore/migrate between Docker hosts, (b) share config files host to container, (c) data must never persist for security reasons, (d) share source code/build artifacts in a dev environment.",
+      "answer": "(a) Volumes, (b) Bind mount, (c) Tmpfs mount, (d) Bind mount. (Sharing data among multiple running containers is also a Volumes use case.)"
+    },
+    {
+      "id": 77,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "What does the 'none' Docker network driver do?",
+      "answer": "It disables all networking for that container."
+    },
+    {
+      "id": 78,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Match the network driver to each activity: (a) migrating from a VM setup, (b) network stack should not be isolated from the Docker host, (c) containers on different Docker hosts need to communicate, (d) containers need a unique MAC address to look like physical hosts.",
+      "answer": "(a) Macvlan, (b) Host, (c) Overlay, (d) Macvlan. (Multiple containers communicating on the same host would use a user-defined bridge network.)"
+    },
+    {
+      "id": 79,
+      "topic": "Lecture 2/3 - Enabling Technologies: Containerization",
+      "question": "Besides the CLI, how else can the Docker daemon be controlled?",
+      "answer": "Through the Docker REST API directly, which can also be called separately by applications rather than only via the CLI."
+    },
+    {
+      "id": 80,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "List the three main characteristics virtualization environments provide.",
+      "answer": "Increased security, managed execution, portability."
+    },
+    {
+      "id": 81,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Why does virtualization increase security? Give the two examples from the lecture.",
+      "answer": "The VMM/hypervisor controls and filters guest activity, preventing harmful operations, and can hide or protect host resources and sensitive information without needing complex security policies. Examples: Java applets run in a sandboxed JVM that filters harmful instructions by policy; in hardware virtualization, the filesystem exposed by a VM is completely separated from the host's filesystem."
+    },
+    {
+      "id": 82,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Why does virtualization increase portability? Give three examples.",
+      "answer": "Because virtualized artifacts are decoupled from the specific underlying physical platform. Examples: Java or Python code runs on any environment running a matching JVM or Python VM; a Docker container runs on any platform running the Docker engine; a VM boots from an image in a standard disk format (aki, ari, ami, vdi, vhd, vhdx, vmdk, etc.) that can be moved between platforms, keeping or converting its format."
+    },
+    {
+      "id": 83,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Distinguish behavior-sensitive and control-sensitive privileged instructions.",
+      "answer": "Behavior-sensitive instructions operate on I/O. Control-sensitive instructions alter the state of the CPU registers."
+    },
+    {
+      "id": 84,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What made the original x86 ISA 'not virtualizable,' and how was this eventually fixed?",
+      "answer": "17 sensitive instructions could be executed in user mode without trapping to the hypervisor (sensitive instructions were not a strict subset of privileged instructions), breaking isolation between guest OSes. Intel VT-x and AMD-V later redesigned these instructions to be privileged, so they trap properly."
+    },
+    {
+      "id": 85,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Distinguish Type I and Type II hypervisors by how each communicates with the layer below it, with examples.",
+      "answer": "Type I (native/bare-metal) hypervisors run directly on hardware using ISA calls (examples: ESX Server, Xen, Hyper-V, vSphere). Type II (hosted) hypervisors run on top of a host OS using system calls (examples: VMware Workstation/Fusion, VirtualBox, KVM, Parallels)."
+    },
+    {
+      "id": 86,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "State Popek and Goldberg's three required properties of a Virtual Machine Manager.",
+      "answer": "Equivalence (a guest under the VMM behaves the same as when executed directly on the physical host), Resource control (the VMM must be in complete control of virtualized resources), Efficiency (a statistically dominant fraction of machine instructions execute without any VMM intervention)."
+    },
+    {
+      "id": 87,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What are the three internal modules of a Virtual Machine Manager, and what does each do?",
+      "answer": "Dispatcher: the entry point that reroutes instructions from the VM instance to one of the other two modules. Allocator: decides what system resources are provided to a VM, invoked by the dispatcher whenever a VM's resource allocation needs to change. Interpreter: routines triggered by a trap whenever the VM executes a privileged instruction."
+    },
+    {
+      "id": 88,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "In the Xen Type I hypervisor architecture, what is Domain 0 responsible for?",
+      "answer": "The OS running in Domain 0 performs VM management: it allocates and maps resources for itself, and can create, copy, save, read, modify, share, and migrate other VMs."
+    },
+    {
+      "id": 89,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "When a trap on a privileged instruction occurs, how does the hypervisor decide what to actually do?",
+      "answer": "It inspects where the instruction came from: if it came from the guest OS, the hypervisor arranges for the instruction to actually be carried out; if it came from a user program, the hypervisor instead emulates what real hardware would do when confronted with that sensitive instruction executed in user mode."
+    },
+    {
+      "id": 90,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What defines 'full virtualization'?",
+      "answer": "The VMM scans the instruction stream: non-critical instructions run directly on the hardware, while privileged, control-sensitive, and behavior-sensitive (critical) instructions are trapped into the VMM and emulated (via binary translation or hypercalls). The guest OS is completely decoupled from the underlying hardware and is unaware it is being virtualized."
+    },
+    {
+      "id": 91,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What is a 'basic block' in binary translation, and how does the hypervisor use it?",
+      "answer": "A short, straight-line sequence of instructions ending in a branch (no jump, call, trap, return, or other flow alteration). Before executing a basic block, the hypervisor scans it for sensitive instructions; if found, it replaces them with a call to a hypervisor procedure, and replaces the block's final branch with a call into the hypervisor so the next block can be checked the same way."
+    },
+    {
+      "id": 92,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Why isn't dynamic binary translation as expensive as it might sound?",
+      "answer": "Translated blocks are cached, so a repeated block does not need retranslation; most code blocks contain no sensitive or privileged instructions and can be executed natively; and sensitive instructions issued by user processes (as opposed to the guest OS itself) can simply be ignored/executed by hardware without needing translation."
+    },
+    {
+      "id": 93,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What tradeoff does hardware-supported virtualization (Intel VT-x / AMD-V) introduce compared to binary translation?",
+      "answer": "Sensitive instructions become a true subset of privileged instructions, so instructions like I/O trap directly to the hypervisor - but a high volume of traps can actually slow performance down compared to a well-optimized binary translator, since each trap carries real overhead."
+    },
+    {
+      "id": 94,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What is paravirtualization, and what does it require from the guest OS?",
+      "answer": "The guest OS is made aware it is running virtualized, and its non-virtualizable instructions are replaced (by an intelligent compiler) with hypercalls to an API the hypervisor exposes, instead of the hypervisor pretending to be real hardware. It requires the guest OS to be modified to support paravirtualization and needs hardware-assisted virtualization to avoid performance loss; it typically leverages a microkernel architecture. Examples: KVM, Hyper-V."
+    },
+    {
+      "id": 95,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What does 'managed execution' mean as a virtualization characteristic?",
+      "answer": "Physical resources are converted into virtual resources through virtualization techniques such as sharing, aggregation, emulation, and isolation."
+    },
+    {
+      "id": 96,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Describe the layered machine reference model relevant to virtualization, from top to bottom.",
+      "answer": "Applications sit above Libraries; Libraries communicate with the Operating System via the Application Binary Interface (ABI); the Operating System communicates with Hardware via the Instruction Set Architecture (ISA)."
+    },
+    {
+      "id": 97,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "In the CPU privilege ring model, which rings are actually used by modern systems?",
+      "answer": "Only Ring 0 (kernel/supervisor mode) and Ring 3 (user mode) - Rings 1 and 2 are not used in modern systems."
+    },
+    {
+      "id": 98,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "In what sense does a 'hyper-visor' get its name, and where does it actually execute?",
+      "answer": "It conceptually runs on top of (above) supervisor mode - but in practice, the hypervisor itself executes in supervisor/kernel mode, since it needs that privilege level to manage its guests."
+    },
+    {
+      "id": 99,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "Give one example implementation for each cell of the Type I / Type II x virtualization-method matrix.",
+      "answer": "Without HW support: ESX Server 1.0 (Type I), VMware Workstation 1 (Type II). Paravirtualization: Xen 1.0 (Type I), VirtualBox 5.0+ (Type II). With HW support: vSphere/Xen/Hyper-V (Type I), VMware Fusion/KVM/Parallels (Type II)."
+    },
+    {
+      "id": 100,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What's the difference between a microkernel and a monolithic Type I hypervisor, with examples of each?",
+      "answer": "A microkernel VMM includes only memory and CPU management, leaving device drivers in the host OS (examples: Microsoft Hyper-V, Xen). A monolithic VMM includes all of the above itself (example: VMware ESX)."
+    },
+    {
+      "id": 101,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "What three things does the Xen VMM itself implement, and what does it require from the guest OS?",
+      "answer": "Memory management, CPU management, and device I/O access, providing hypercalls for sensitive instructions; it requires modifying the guest OS, i.e. paravirtualization."
+    },
+    {
+      "id": 102,
+      "topic": "Lecture 4 - Virtualization",
+      "question": "List the major challenges that made x86 difficult to virtualize, beyond the sensitive/privileged instruction mismatch.",
+      "answer": "The x86 architecture was of daunting complexity, x86 machines had diverse peripherals, and there was a need to preserve a simple user experience despite all this."
+    },
+    {
+      "id": 103,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What is the core goal difference between Autonomic Computing and IT Operations Automation, per the lecture's recap?",
+      "answer": "Autonomic computing aims to keep humans out of the loop entirely, with only high-level objectives provided. IT Operations Automation (ITOA) aims to reduce human interaction and manual processes using software tools, without necessarily removing humans from the decision path."
+    },
+    {
+      "id": 104,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "List the three main benefits of IT Operations Automation.",
+      "answer": "Improved efficiency and productivity (frees IT staff for more strategic work), reduced human error (eliminates mistakes from manual intervention), saved time and costs (minimizes the burden of repetitive tasks)."
+    },
+    {
+      "id": 105,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Is Ansible agent-based or agentless, and why does this matter?",
+      "answer": "Agentless - no software needs to be installed or running on managed hosts, so there is zero overhead when management isn't actively taking place. This makes it well suited to high-security or high-performance environments wary of a persistent management agent."
+    },
+    {
+      "id": 106,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "How does Ansible's push model deliver automation to remote machines?",
+      "answer": "Instructions are prepared and stored on the control server, then pushed to managed hosts using an existing remote management framework - SSH for Linux/UNIX, WinRM for Windows - transferring small pieces of code called modules that the remote machines execute; remote machines cannot see or affect how other machines are configured."
+    },
+    {
+      "id": 107,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What does it mean for an Ansible core module to enforce 'desired state,' and why does that matter?",
+      "answer": "The module checks whether the specified task is actually still needed before doing anything - e.g. it only starts a webserver if it isn't already running. This means a playbook can be applied repeatedly without side effects, and runs quickly and efficiently once the desired state has already been reached."
+    },
+    {
+      "id": 108,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Map each of the 4 self-* properties to how a playbook realizes it, per the lecture.",
+      "answer": "Self-configuration: a playbook deploys the new decided system configuration. Self-optimization: a playbook performs all required actions when adding new servers. Self-healing: a playbook detaches and restarts a server/application whose performance is degrading. Self-protection: a playbook rolls out an update when the system is under attack due to a vulnerability."
+    },
+    {
+      "id": 109,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "How does the lecture distinguish Orchestration from Automation?",
+      "answer": "Automation is setting up one task to run on its own. Orchestration is automating a series of individual tasks so that they work together as a coordinated process or workflow."
+    },
+    {
+      "id": 110,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "List the main features typically offered by a container orchestration framework.",
+      "answer": "Resource limit control, scheduling, load balancing, health check, fault tolerance, and auto-scaling."
+    },
+    {
+      "id": 111,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What does it mean to 'manage containerized workload' in Kubernetes? Give at least 4 of the 6 capabilities listed.",
+      "answer": "Any 4 of: service discovery and load balancing; storage orchestration (automatically mounting storage); automated rollouts and rollbacks (bringing deployed containers to a described desired state); automatic bin packing (fitting containers onto nodes given their CPU/memory needs); self-healing (restart, replace, kill, or stop advertising faulty containers); secret and configuration management."
+    },
+    {
+      "id": 112,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Name the 5 Kubernetes control plane components.",
+      "answer": "kube-apiserver, etcd, kube-scheduler, kube-controller-manager, cloud-controller-manager."
+    },
+    {
+      "id": 113,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What does etcd store, and what property must it guarantee?",
+      "answer": "It stores all cluster data as Kubernetes' backing store; it must be a consistent and highly-available key-value store."
+    },
+    {
+      "id": 114,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Describe the Job controller as a concrete example of how a Kubernetes controller works.",
+      "answer": "A Job is a resource that runs one or more Pods to carry out a task and then stop. When the Job controller sees a new Job, it ensures the right number of Pods are running somewhere in the cluster by telling the API server to create or remove Pods; other control-plane components act on those changes, and once the work is done, the Job controller marks the Job as Finished."
+    },
+    {
+      "id": 115,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "How does the Cluster Autoscaler differ from an 'internal' controller like the Job controller?",
+      "answer": "It is a controller that interacts with external state: it reads its desired state from the API server (e.g. enough nodes to satisfy demand), but then communicates directly with an external system to actually add or remove physical/virtual nodes, rather than only creating/removing Kubernetes objects internally."
+    },
+    {
+      "id": 116,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Walk through the two-stage decision process the kube-scheduler uses to place a Pod on a Node.",
+      "answer": "Filtering: find the set of 'feasible nodes' that satisfy the Pod's requirements (e.g. the PodFitsResources filter checks a node has enough available resources); if the resulting list is empty, the Pod remains unscheduled. Scoring: score every feasible node using the active scoring rules, then bind the Pod to the node with the highest score (ties broken at random), notifying the API server of the decision."
+    },
+    {
+      "id": 117,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What five categories of information describe a Kubernetes Node's status?",
+      "answer": "Address (hostname, internal/external IP), Conditions (e.g. ready or not - if unknown/false for too long, the node controller triggers eviction of that node's Pods, default timeout 5 minutes), Capacity (CPU, memory, max schedulable pods), Allocable (resources actually available to normal Pods), Info (kernel version, Kubernetes version, container runtime, operating system)."
+    },
+    {
+      "id": 118,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What Kubernetes object is the smallest deployable unit, and what does it share?",
+      "answer": "The Pod - it models an application-specific 'logical host' containing one or more tightly-coupled containers that share storage resources, network resources, and a specification for how to run; the shared context is a set of Linux namespaces and cgroups."
+    },
+    {
+      "id": 119,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What does it mean that a Kubernetes Object is a 'record of intent,' and what are its two core fields?",
+      "answer": "Once created, the K8s system will constantly work to ensure that object actually exists / matches its description. Its two fields are spec (the desired state, e.g. '3 replicas') and status (the current state, e.g. '2 replicas currently running')."
+    },
+    {
+      "id": 120,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "In the Deployment object example, what happens if one of the 3 desired replica instances fails?",
+      "answer": "The failure causes a status change; Kubernetes detects the difference between the spec (3 replicas desired) and the status (now 2 running) and responds by starting a replacement instance to close the gap."
+    },
+    {
+      "id": 121,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What are the three Kubernetes Node-level components, and what does each do?",
+      "answer": "kubelet - the primary node agent, ensures the containers described in a PodSpec are running and healthy, and can register the node with the API server. kube-proxy - a network proxy that maintains network rules enabling communication to the cluster's Pods from inside or outside the cluster. Container runtime - the software actually responsible for running containers (e.g. Docker, CRI-O)."
+    },
+    {
+      "id": 122,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Besides the Job controller, name three other control loops run by kube-controller-manager.",
+      "answer": "Node controller (notices and responds when nodes go down), EndpointSlice controller (populates EndpointSlice objects linking Services to Pods), ServiceAccount controller (creates default ServiceAccounts for new namespaces)."
+    },
+    {
+      "id": 123,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What is the purpose of the cloud-controller-manager?",
+      "answer": "To link a Kubernetes cluster with a specific cloud provider's API."
+    },
+    {
+      "id": 124,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Define Node Affinity, and list at least three use cases the lecture gives for it.",
+      "answer": "A set of rules specifying preferences for how Pods are placed on Nodes, constraining eligible nodes based on matching labels. Use cases: ensuring compliance with data sovereignty laws, optimizing network latency for distributed systems, allocating resources for HPC, handling workloads with specific storage requirements, supporting multi-tenancy and resource isolation."
+    },
+    {
+      "id": 125,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "Define Node Anti-Affinity and its two main use cases.",
+      "answer": "Rules that prevent Pods from being scheduled onto the same (or specific) nodes. Used for high-availability deployments (spreading pods across nodes/zones to reduce single-point-of-failure risk) and for separating workloads that shouldn't be co-located, for performance or security reasons."
+    },
+    {
+      "id": 126,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "What's the difference between the container lifecycle phases handled by a 'container manager' versus an 'orchestrator'?",
+      "answer": "A container manager's API supports at least the phases from acquire to run. An orchestrator automates the deploy, run, and maintain (runtime) phases on top of that."
+    },
+    {
+      "id": 127,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "List the tasks that datacenter automation platforms typically handle.",
+      "answer": "Provisioning, configuration, patching, monitoring, and continuous integration/delivery (CI/CD)."
+    },
+    {
+      "id": 128,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "In an Ansible Playbook, what is the relationship between plays, tasks, and modules?",
+      "answer": "A playbook consists of a series of plays; each play defines automation across a set of hosts (the inventory) and consists of multiple tasks; each task can target one, many, or all hosts in the inventory and is a call to an Ansible module - a small piece of code that does something specific, ranging from simple (place a config file) to complex (spin up an entire CloudFormation infrastructure)."
+    },
+    {
+      "id": 129,
+      "topic": "Lecture 5 - Automation & Orchestration",
+      "question": "In the three-tier rolling-update example, what does Ansible do right before stopping a web application server, and right after restarting it?",
+      "answer": "Before stopping: it signals the monitoring system of an upcoming outage window, then signals the load balancer to take that server out of the pool. After restarting: it runs tests on the new server/code, then signals the load balancer to put the server back into the pool and signals monitoring to resume alerting on it."
+    },
+    {
+      "id": 130,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Distinguish 'all-or-nothing' atomicity from 'before-or-after' atomicity.",
+      "answer": "All-or-nothing: a multi-step transaction either completes entirely (post-commit, irreversible actions) or is fully undone (pre-commit actions can still be rolled back) - nothing partial ever persists. Before-or-after: the result of any read or write is as if it occurred either completely before or completely after any other concurrent read/write - concurrent execution gives the same result as some serialized execution."
+    },
+    {
+      "id": 131,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Compare the cell storage model and the journal storage model in terms of atomicity guarantees.",
+      "answer": "Cell storage (fixed-size cells, one object per cell, mirrors how RAM/disk sectors are organized) guarantees read/write coherence and before-or-after atomicity, but not all-or-nothing - once a cell is overwritten there is no way to undo it. Journal storage (a manager plus cell storage, keeping the full history of every update in a log) guarantees all-or-nothing atomicity, since the log is written first and the change is only committed to cell storage afterward - and all-or-nothing atomicity in turn implies both read/write coherence and before-or-after atomicity."
+    },
+    {
+      "id": 132,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What is a Byzantine failure, and what two broad categories does it fall into?",
+      "answer": "A failure with no restriction on what incorrect behavior can occur - a failed node can generate arbitrary data, even appearing to function correctly to some other nodes. Categories: omission failures (crash, failing to receive a request or send a response) and commission failures (processing a request incorrectly, corrupting local state, sending an incorrect or inconsistent response)."
+    },
+    {
+      "id": 133,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "In basic Paxos, what happens in each of the two phases?",
+      "answer": "Phase I (Prepare/Promise): the proposer sends a prepare message with proposal number k to a majority of acceptors, who promise not to accept any proposal numbered lower than k and report the highest-numbered proposal they've already accepted. Phase II (Accept request/Accept): the proposer chooses a value (the highest-numbered proposal's value from the responses, or an arbitrary one if none exists), sends an accept request with (k, v) to a quorum, and each acceptor accepts it unless it has since promised a higher-numbered proposal - if accepted, it notifies the proposer and every learner."
+    },
+    {
+      "id": 134,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Why does GFS use a large (64MB) chunk size instead of the 0.5-2MB blocks typical of normal filesystems?",
+      "answer": "To optimize for large files: it reduces the metadata the master must maintain, increases the likelihood multiple operations land on the same chunk (letting a persistent connection to that chunkserver be reused), reduces the number of requests needed to locate a chunk, and reduces disk fragmentation."
+    },
+    {
+      "id": 135,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Where does the GFS master store chunk location information, and how does it stay current?",
+      "answer": "Only in the master's in-memory control structure - it is never persisted to disk. It is rebuilt at system startup and updated whenever a new chunkserver joins the cluster, which is how the master maintains up-to-date knowledge of chunk locations."
+    },
+    {
+      "id": 136,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Walk through the 6 steps of a GFS file write shown in the lecture.",
+      "answer": "1) Client contacts the master, which assigns a lease to a primary chunkserver and returns the primary and secondary chunkserver IDs. 2) Client sends data to all chunkservers, which store it in an LRU buffer and ACK. 3) Client sends the write request to the primary, which applies the mutation. 4) The primary forwards the write to the secondaries. 5) Each secondary ACKs the primary once it has applied the mutation. 6) The primary ACKs the client."
+    },
+    {
+      "id": 137,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What are the three stages of the HDFS write protocol?",
+      "answer": "Setup of the pipeline, data streaming and replication (the write-pipeline stage itself), and shutdown of the pipeline (the acknowledgement stage)."
+    },
+    {
+      "id": 138,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "In Amazon S3, what role does the ETag play in error handling, and who is responsible for retrying?",
+      "answer": "S3 computes the MD5 of every object written (or read) and returns it in a field called ETag as part of the acknowledgment. The client is responsible for independently computing its own MD5 and comparing it against the ETag - a mismatch means corruption occurred during transmission or storage, and the client must retry the write or read."
+    },
+    {
+      "id": 139,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "For which S3 operations is strong (not eventual) consistency guaranteed?",
+      "answer": "PUT and DELETE requests on objects (both new-object writes and overwrites of existing objects), and read operations on access control lists (ACLs), object tags, and object metadata. Updates to a single key are also atomic: a concurrent GET during a PUT returns either fully old or fully new data, never a partial or corrupt mix."
+    },
+    {
+      "id": 140,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does S3 resolve two concurrent PUT requests to the same key, given that it offers no object locking?",
+      "answer": "Last-writer-wins semantics, based on internal timestamp: the request with the latest timestamp takes precedence. Since the arrival order of requests (and the order acknowledgments reach applications) is unpredictable, the recommended approach is to perform a read only after both writes have been acknowledged, to determine the final value."
+    },
+    {
+      "id": 141,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Describe BigTable's data model as a map, including its three-part key.",
+      "answer": "A BigTable is a sparse, distributed, persistent, multidimensional sorted map indexed by (row:string, column:string, time:int64) mapping to a string value; every value is an uninterpreted array of bytes, and rows are stored in lexicographic order by row key, dynamically partitioned into tablets for load balancing."
+    },
+    {
+      "id": 142,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What are BigTable's three core building blocks / underlying systems?",
+      "answer": "The Google File System (for actual storage), the Google SSTable file format (a persistent, ordered, immutable key-value map), and Chubby (a highly-available, persistent distributed lock service)."
+    },
+    {
+      "id": 143,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "List at least 4 of the specific tasks Chubby performs for BigTable.",
+      "answer": "Any 4 of: ensuring there is at most one active master at any time; letting the master discover the tablet servers it controls and finalize tablet server deaths; letting clients find the master; storing BigTable's schema information (column-family info per table); storing access control lists; acting as a well-known, available location to store a small amount of bootstrap metadata."
+    },
+    {
+      "id": 144,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does Dynamo's partitioning algorithm work, and what problem do virtual nodes solve within it?",
+      "answer": "Dynamo uses consistent hashing: each node is assigned a random position on a ring, and each key is hashed to a position on that same ring, with the key assigned to the node at or after that position. The basic scheme risks non-uniform, unbalanced load - virtual nodes fix this by letting each physical node hold multiple positions on the ring (with more capable machines given more virtual nodes), and also smooth out failure/recovery, since a failed node's load disperses evenly across the remaining nodes and a rejoining or new node picks up a roughly even share back from each of the others."
+    },
+    {
+      "id": 145,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What three common goals does the lecture attribute to all cloud storage systems (DFS, SQL, NoSQL alike)?",
+      "answer": "Massive scaling on demand, high availability, and simplified application development and deployment."
+    },
+    {
+      "id": 146,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What hardware-level operations and higher-level mechanisms provide the non-interruptible primitives atomicity is built on?",
+      "answer": "Hardware: test-and-set (writes to a memory location and returns its old content as one non-interruptible operation) and compare-and-swap (compares a memory location's content to a given value and, only if equal, updates it). Higher-level: locks, semaphores, and monitors for creating critical sections around shared resources."
+    },
+    {
+      "id": 147,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Describe the three phases of all-or-nothing atomicity.",
+      "answer": "Pre-commit phase (preparatory, reversible actions, e.g. allocating a resource or fetching a page from secondary storage), transition (the commit-point), and post-commit/commit step (irreversible actions, e.g. altering the only copy of an object)."
+    },
+    {
+      "id": 148,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What structural assumption does the cell storage model make, and at what unit does it read/write?",
+      "answer": "It assumes storage is organized into cells of the same size, with each object fitting exactly in one cell; reads/writes happen at the sector or block level, reflecting how RAM and disks are physically organized."
+    },
+    {
+      "id": 149,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "In the journal storage model, what actions can a user request from the journal manager, and what commands does the manager translate them into against cell storage?",
+      "answer": "User requests: start a new action, read a cell's value, write a cell's value, commit an action, abort an action. Manager's cell-storage commands: read a cell, write a cell, allocate a cell, deallocate a cell."
+    },
+    {
+      "id": 150,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What is the ACID vs 'soft-state' tradeoff between relational and NoSQL databases?",
+      "answer": "Relational DBMSs guarantee Atomicity, Consistency, Isolation, Durability (ACID) but are usually not scalable in speed or size. NoSQL databases adopt a soft-state, eventually-consistent approach, pushing ACID-like guarantees onto the application developer in exchange for better partitioning, replication, and horizontal scalability."
+    },
+    {
+      "id": 151,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does the lecture define consensus, and what do consensus protocols guarantee versus not guarantee?",
+      "answer": "Consensus is the process of agreeing on one of several alternatives proposed by a number of agents. Consensus protocols guarantee freedom from inconsistencies (safety) but do not guarantee fault tolerance - they cannot guarantee progress."
+    },
+    {
+      "id": 152,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Name the roles involved in basic Paxos, and what a 'quorum' and a 'proposal' are.",
+      "answer": "Roles: Client (issues a request), Proposer (advocates a client's request to acceptors), Leader (a distinguished proposer that coordinates the protocol in case of conflicts), Acceptor (the fault-tolerant 'memory' of the protocol), Learner (takes action once a request has been agreed upon). A quorum is a subset of all acceptors; a proposal is a pair (proposal number, value)."
+    },
+    {
+      "id": 153,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What features of the 'cloud' access model does GFS's design assume?",
+      "answer": "Files range from a few GB to hundreds of TB; workloads append rather than randomly overwrite; reads are mostly sequential; response time is not the primary requirement since data is processed in bulk; and the system uses a relaxed consistency model to simplify implementation without overburdening application developers."
+    },
+    {
+      "id": 154,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does GFS achieve reliable recovery after a failure, and how does it minimize recovery time?",
+      "answer": "The operation log maintains a historical record of metadata changes; changes are atomic and are not made visible to clients until recorded on multiple replicas on persistent storage. The master periodically checkpoints its state, so at recovery time it only needs to replay log records written after the last checkpoint."
+    },
+    {
+      "id": 155,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "In GFS, who handles file creation, and who handles ongoing file access and updates?",
+      "answer": "File creation is handled directly by the master. File access is handled by the application together with a chunkserver: the master grants a lease to one chunkserver (the primary), which becomes responsible for handling the actual updates."
+    },
+    {
+      "id": 156,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What are the responsibilities of the HDFS NameNode versus the DataNode?",
+      "answer": "NameNode (master): manages the filesystem namespace, stores metadata, controls file access, records changes in a log, and checks DataNode liveness (a Secondary NameNode supports high availability). DataNode (slave): performs the low-level read/write operations."
+    },
+    {
+      "id": 157,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What are HDFS's basic technical properties regarding portability, POSIX compliance, block size, and default replication?",
+      "answer": "HDFS is a portable filesystem written in Java, but cannot be directly mounted on an existing OS; it is not fully POSIX-compliant but is highly performant; it uses 64-128MB blocks and replicates data on 3 nodes by default."
+    },
+    {
+      "id": 158,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Describe Amazon S3's storage model: what are objects and buckets, and what limits apply to each?",
+      "answer": "Data is stored as named objects grouped into named buckets (essentially a map of bucket+key+version). Bucket names are global, each user may create up to 100 buckets, and buckets must be explicitly created via the API before use, with ACLs to set read/write permissions. Objects can store 1-5GB of arbitrary bytes, have a key unique within their bucket, are addressed by a URI path, and can be read or written in their entirety or by specific byte ranges."
+    },
+    {
+      "id": 159,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What is S3's consistency model for bucket configuration, as opposed to objects, and what does the lecture recommend as a result?",
+      "answer": "Bucket configuration follows an eventual consistency model - e.g. a just-deleted bucket might still briefly appear when listing all buckets, and enabling versioning can take a short time to fully propagate. The lecture suggests waiting around 15 minutes before performing PUT/DELETE requests on objects after such a bucket-level change."
+    },
+    {
+      "id": 160,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "List the structural properties that let NoSQL/document databases scale well and stay resilient.",
+      "answer": "They are designed to scale well, exhibit no single point of failure, have built-in support for consensus-based (majority-vote) decisions, and support partitioning and replication as basic primitives."
+    },
+    {
+      "id": 161,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Describe BigTable's row-key properties and how they enable efficient locality-based access, using the Webtable example.",
+      "answer": "A row key is an arbitrary string up to 64KB; read/write on a single row is atomic regardless of the number of columns involved; rows are stored in lexicographic order and dynamically partitioned into tablets, so reads of short row ranges are efficient, typically touching only a small number of machines. Example: Webtable uses the reversed hostname as its row key (maps.google.com/index becomes com.google.maps/index) so pages from the same site sit near each other for locality."
+    },
+    {
+      "id": 162,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What are BigTable column families, and what rules govern them?",
+      "answer": "A column family groups related column keys (a column key is written as family:qualifier). All data in a family must be of the same type, family data can be compressed, a family must be created before any data is stored under a key within it, and the number of families should stay small (up to hundreds) and rarely change - though the number of columns within a family is effectively unbounded. Access control and disk/memory accounting are both done at the column-family level."
+    },
+    {
+      "id": 163,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How are BigTable cell timestamps assigned, and what two mechanisms exist for automatically garbage-collecting old versions?",
+      "answer": "Timestamps (64-bit integers) can be assigned either by BigTable itself (real time in microseconds) or by the client application (which must then generate unique timestamps itself to avoid collisions). Versions are stored in decreasing timestamp order so the most recent can be read first. Garbage collection can keep only the last N versions of a cell, or only versions newer than N days."
+    },
+    {
+      "id": 164,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What are the BigTable master's five responsibilities?",
+      "answer": "Assigning tablets to tablet servers, detecting the addition and expiration of tablet servers, balancing tablet-server load, garbage-collecting files in GFS, and handling schema changes (such as table and column-family creation)."
+    },
+    {
+      "id": 165,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does an SSTable lookup work internally?",
+      "answer": "When an SSTable is opened, its block index is loaded into memory; a lookup finds the right block via binary search on that in-memory index, then accesses the block with a single disk seek (or, if the whole SSTable is loaded into memory, with no disk access at all)."
+    },
+    {
+      "id": 166,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does GFS use Chubby, distinctly from how BigTable uses it?",
+      "answer": "GFS uses Chubby locks to appoint/elect the GFS master server, and as a well-known, available location to store a small amount of metadata - a narrower role than in BigTable, where Chubby also handles tablet-server discovery, client master-discovery, and schema/ACL storage."
+    },
+    {
+      "id": 167,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What kinds of Amazon services motivated Dynamo, and why was a relational database a poor fit for them?",
+      "answer": "Services needing only primary-key access to a data store - best-seller lists, shopping carts, customer preferences, session management, sales rank, and the product catalog. A relational DB would be inefficient and would limit the scale and availability these services require."
+    },
+    {
+      "id": 168,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "List Dynamo's five design requirements.",
+      "answer": "A simple query model (read/write by primary key only), no ACID guarantees (trading consistency for availability), efficiency on commodity hardware within latency/throughput targets, no special security requirements (since it operates only within Amazon's internal network), and scalability to hundreds of storage hosts."
+    },
+    {
+      "id": 169,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "List Dynamo's four design principles.",
+      "answer": "Incremental scalability (scale out one storage host at a time), symmetry (every node has the same responsibilities as its peers), decentralization (favor peer-to-peer techniques over centralized control), heterogeneity (exploit differences in infrastructure capacity)."
+    },
+    {
+      "id": 170,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "What do Dynamo's two system-interface primitives, Get(key) and Put(key, context, object), each do?",
+      "answer": "Get(key) locates the replicas associated with the key and returns either a single object or a list of conflicting-version objects, along with a context. Put(key, context, object) determines which nodes should hold the object's replicas (based on the key) and writes them to disk; the context carries opaque system metadata such as the object's version."
+    },
+    {
+      "id": 171,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "How does Dynamo replicate a data item across nodes, using the concept of a coordinator?",
+      "answer": "Each data item is replicated at N hosts. Each key is assigned to a coordinator node, which is responsible for replication within its range: besides storing the key locally, it replicates it to the N-1 clockwise successor nodes on the ring."
+    },
+    {
+      "id": 172,
+      "topic": "Lecture 6 - Cloud Storage",
+      "question": "Why does Dynamo use vector clocks for data versioning, and what tradeoff does this create for something like a shopping cart?",
+      "answer": "Because eventual consistency means a put() can return before all replicas are updated, so a later get() might return stale data; vector clocks (node, counter pairs) track causality across divergent versions so they can eventually be reconciled. This is tolerable for 'add to cart,' where an add should never be rejected even if applied to an older version of the cart - divergent versions are simply reconciled later."
+    }
+  ]
+}
