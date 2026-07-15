@@ -1,6 +1,6 @@
 {
   "deck_title": "Cloud Computing (Casalicchio, Sapienza) - Lecture Slide Flashcards",
-  "note": "Expanded to an exhaustive set per lecture for self-examination. Source docs for 'Lecture 2' were labeled inconsistently (both Containerization and Distributed Systems/SOA slides say Lecture 2); ordered here by logical course progression.",
+  "note": "Lecture slide cards plus flipped-classroom (FC) cards. Filter by 'topic' in the app.",
   "flashcards": [
     {
       "id": 1,
@@ -1033,6 +1033,678 @@
       "topic": "Lecture 6 - Cloud Storage",
       "question": "Why does Dynamo use vector clocks for data versioning, and what tradeoff does this create for something like a shopping cart?",
       "answer": "Because eventual consistency means a put() can return before all replicas are updated, so a later get() might return stale data; vector clocks (node, counter pairs) track causality across divergent versions so they can eventually be reconciled. This is tolerable for 'add to cart,' where an add should never be rejected even if applied to an older version of the cart - divergent versions are simply reconciled later."
+    },
+    {
+      "id": 173,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "Use Case 1 (video conference system): is it a cloud service? Justify against each essential characteristic.",
+      "answer": "Yes - all five hold. On-demand self-service: Option A, fully automated provisioning (resources allocated automatically, max ~2 min, transparent to consumers). Broad network access: Option A, available over the Internet via an HTTPS front-end website and a standard browser. Resource pooling: the same video conference software platform serves all users via a multi-tenant model, and the physical/virtual resources running those instances are shared among CSCs. Rapid elasticity: Option A, automated and near-real-time - if participants increase unpredictably, more resources are allocated automatically with a 1-60 second setup time. Measured service: a monitoring platform measures data traffic, computing resources per conference, and storage per user, supporting QoS guarantees and billing."
+    },
+    {
+      "id": 174,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "Use Case 2 (scientific computing platform): is it a cloud service, and precisely which characteristics fail?",
+      "answer": "No. It fails On-demand self-service (a back-office of human operators processes every VM instantiation request, verifying physical capacity and queueing if none is available), fails Rapid elasticity (requests are only guaranteed served within 36 hours of checkout), and fails Measured service in substance (usage is measured, but the CSC pays for instantiated resources even if unused). Broad network access and Resource pooling do hold. Failing even one characteristic disqualifies it."
+    },
+    {
+      "id": 175,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "What service model and deployment model does each FC1 use case fall under, and why?",
+      "answer": "Use Case 1: SaaS, because what is provisioned is a software application - computer programs letting the user perform a group of coordinated functions/tasks. Use Case 2: IaaS, because what is provisioned is infrastructure (virtual servers). Both are public cloud, because unrelated CSCs share the cloud service and its underlying resources."
+    },
+    {
+      "id": 176,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "In the FC1 worksheet, what distinguishes Option A from Option B for on-demand self-service, and which use case shows each?",
+      "answer": "Option A: fully automated service provisioning (Use Case 1 - everything happens automatically within ~2 minutes). Option B: the CSC uses an automated interface to request and track the service, but the CSP may use manual labor to actually provision it (Use Case 2's web interface for resource selection, backed by human operators)."
+    },
+    {
+      "id": 177,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "Why can a system be scalable without being elastic? What assumption must hold for elasticity?",
+      "answer": "Scalability is the ability of a system to sustain increasing workloads with adequate performance provided hardware resources are added - it says nothing about how resources are managed in time. Elasticity assumes at least one 'adaptation process' exists: a specific process that dynamically manages resources based on task needs. If that assumption does not hold, a scalable system is non-elastic. Scalability is a prerequisite for elasticity, not a substitute."
+    },
+    {
+      "id": 178,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "What are the four elasticity characteristics that capture the 'temporal aspects' scalability lacks?",
+      "answer": "Autonomic scaling, elasticity dimensions, resource scaling units, and scalability bounds."
+    },
+    {
+      "id": 179,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "What does the matching function m(w) = r represent, and why must it be derived separately for upward and downward scaling?",
+      "answer": "It returns the minimal amount of resources r of a given type needed to satisfy the system's performance requirements for workload intensity w. It must be derived separately for each direction because you cannot assume the optimal resource allocation level transitioning out of an under-provisioned state (upward) is the same as transitioning out of an over-provisioned state (downward) - the relationship is not symmetric."
+    },
+    {
+      "id": 180,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "Define speed and precision as the two core aspects of elasticity, and state what each actually measures.",
+      "answer": "Speed: the time needed to switch from a mis-provisioned state to an optimal or under/over-provisioned state - it measures the time needed for change. Precision: how far the current amount of allocated resources is from the actual resource demand - it measures whether you are correctly responding to demand. Speed measures time; precision measures correctness."
+    },
+    {
+      "id": 181,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "What happens when a system scales rapidly but with low precision? Give the impact on both provider and end user.",
+      "answer": "It reacts almost instantly but consistently allocates the wrong amount: adding too many resources when load rises, or releasing too many when load falls, causing oscillation between under- and over-provisioning. Provider impact: wasted resources and having to manage frequent load changes. User impact: an unstable system - a drop in load can swing into massive underprovisioning, while sustained overprovisioning makes the service too expensive."
+    },
+    {
+      "id": 182,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "Why might a more efficient system falsely appear more elastic in a benchmark, and how do the authors fix this?",
+      "answer": "Efficiency is how many resources are consumed to process a given amount of work. If you fix only the workload, the more efficient system looks more elastic - but only because its adaptation mechanism is not stressed to the same extent, since it is designed for heavier workloads. The fix: fix both the workload AND the demand curve across all systems (e.g. doubling the workload for the more efficient one), so every system's adaptation mechanism is equally stressed regardless of efficiency."
+    },
+    {
+      "id": 183,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "Why do Resource Scaling Units make perfect elasticity impossible even with instantaneous adaptation?",
+      "answer": "Resources can only be provisioned in discrete units (whole CPU cores, VMs, physical nodes), while real demand fluctuates continuously and smoothly. Even with zero adaptation delay, allocated capacity can only approximate demand up to the granularity of those units - supply is a staircase against a smooth demand curve - so a residual deviation from perfect matching always remains."
+    },
+    {
+      "id": 184,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "For a workload 'burst', which elasticity metric matters most and why?",
+      "answer": "A-bar (the average time to scale up). A burst is a sudden sharp increase in workload intensity that immediately pushes the system into an underprovisioned state. A-bar is defined as the average time to switch from underprovisioned to optimal or overprovisioned - i.e. the average speed of scaling up. Minimizing it is what stops the system buckling under the surge; P_d is more relevant to economic efficiency once the burst subsides."
+    },
+    {
+      "id": 185,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "For a predictable 'seasonal pattern' of falling demand, which metric matters most and why?",
+      "answer": "P_d - the average precision of scaling down. When demand is predictably declining the risk isn't running out of capacity, it's sitting on unnecessarily large allocations far longer than the falling demand justifies, so precision of resource release is what protects cost."
+    },
+    {
+      "id": 186,
+      "topic": "FC1 - Definition & Architecture",
+      "question": "In FC1's Use Case 1, what specific evidence in the scenario supports Resource Pooling?",
+      "answer": "The video conference software platform used by the CSP is the same for all users, and each time a conference starts the CSP creates a new instance of that platform - possible because the application uses a multi-tenant model. Moreover, the physical and virtual resources instantiated to run those software instances are shared among the CSCs."
+    },
+    {
+      "id": 187,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "How does the Autonomic Nervous System serve as the metaphor for autonomic computing, and what maps to the 'conscious brain'?",
+      "answer": "The ANS regulates vital functions autonomously, without conscious control - so it maps to the Autonomic Manager, which handles subconscious, low-level activities without wilful human control. The conscious brain maps to the human administrator: it handles rational, high-level decisions, specifies objectives, and intervenes only for major failures or to change system goals - because the ANS alone is not always enough to adapt to new environments."
+    },
+    {
+      "id": 188,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Define homeostasis in biological and computing terms, and name the 'vital parameters' of a computing system.",
+      "answer": "Biological: a system's ability to maintain internal equilibrium despite changes in its external environment and internal state. Computing: the continual provisioning of the system's functional services and associated QoS properties in the presence of external and internal changes. Vital parameters are the key operational metrics that must stay in a survivability zone - CPU load, memory usage, network bandwidth and latency, error rates - versus the biological equivalents of body temperature, oxygen levels, and glucose concentration."
+    },
+    {
+      "id": 189,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "How did the emergence of motility necessitate a nervous system, and what is the software analogy?",
+      "answer": "Static organisms (plants, fungi) were rooted in their environment and had no stringent need for a nervous system. Once animals became motile they faced perpetual environmental shifts, and survival depended on adapting to new conditions and avoiding fatal ones - the nervous system evolved as the enabler, coordinating body parts and acting as a 'change manager'. Software followed the same arc: programs were once isolated entities in static environments running strictly defined calculations; today they are agile and mobile, operating collaboratively in unpredictable dynamic environments where manual administration is too slow - so autonomic computing introduces automated change management as the software nervous system."
+    },
+    {
+      "id": 190,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Name three non-computing scientific domains that contribute models to autonomic computing, with one concept from each.",
+      "answer": "Economics (microeconomics): virtual currencies for negotiation among processes, and supply/demand patterns for resource allocation. Game theory: the Nash equilibrium - a stable state where no component improves by unilaterally changing behaviour - modelling agents that act on partial information. Biology: the ANS metaphor and homeostasis. (Control theory - feedback loops for regulation - and the societal/political/psychological disciplines contributing decision-making strategies are also valid.)"
+    },
+    {
+      "id": 191,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "How are virtual currencies and supply/demand patterns applied to resource allocation among autonomic processes?",
+      "answer": "Each process gets a virtual currency budget it must spend to obtain resources (CPU time, bandwidth), forcing prioritization and preventing any single component from monopolizing resources. Supply and demand: when a resource becomes scarce its price rises, so processes reduce consumption or delay non-critical work; when it is abundant the price falls and they can use more. In posted-price negotiation the provider sets a price in real or artificial currency and the requester takes it or leaves it."
+    },
+    {
+      "id": 192,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Beyond virtual currencies, what three other market mechanisms does autonomic computing borrow from microeconomics?",
+      "answer": "Auctions and brokers: middle agents act as intermediaries (brokers, auctioneers) that can run an auction or assist complex negotiations over limited resources. Utility functions: they define a quantitative level of desirability of a system state, so that when resources are insufficient the most desirable available combination can be found. Tendering: the sensor node whose Quality of Context is closest to what was requested wins the tender, and frequent retendering lets requester nodes autonomously adapt to the best available source."
+    },
+    {
+      "id": 193,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Why might a Nash Equilibrium not be Pareto optimal, and what is required to move toward the Pareto boundary?",
+      "answer": "In a Nash equilibrium every application makes the best decision for itself assuming no other changes behaviour. Because each player maximizes its own benefit, possibly to the detriment of the group, the system can settle into a state that harms overall performance - and no single app can fix it alone. Pareto optimality is the global optimum, where it is impossible to give one application more resources without taking them from another. Moving from Nash to Pareto fundamentally requires cooperation among the agents."
+    },
+    {
+      "id": 194,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Distinguish Stackelberg leadership from Conjectural equilibrium, and say when the latter is preferred.",
+      "answer": "Nash requires players to be fully rational with perfect knowledge of each other's strategies - practically infeasible. Stackelberg leadership: one player holds private knowledge of all its competitors and optimizes its responses accordingly; this often improves the performance of every player, even followers acting myopically - but it still requires at least one player to gain perfect information. Conjectural equilibrium: a decentralized alternative where no leader exists and perfect knowledge is impossible - agents replace knowledge with 'beliefs'/conjectures, developed and refined through repeated interaction with their environments. It is preferred under imperfect knowledge, especially in large-scale open systems where sharing internal logic is computationally expensive or security-prohibited."
+    },
+    {
+      "id": 195,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Define a Complex Adaptive System, and explain why distinguishing 'extremely complicated' from 'nonlinear composition' is critical.",
+      "answer": "A CAS is a complex system that is also adaptive: it modifies itself in response to environmental changes and can learn from experience (ecosystems, ant colonies, brains, immune systems, stock markets, cultural communities). 'Complexity' is used across communities to mean three different things: extremely complicated (many parts), nonlinear composition (not simply the sum of its parts), or unpredictable resulting behaviour. Isolating nonlinearity matters because it is what makes mapping local actions to global emergent behaviour highly nontrivial, complicating the mathematical ability to derive rules that control or design the system."
+    },
+    {
+      "id": 196,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Explain the relationship between self-organization and emergence in a CAS.",
+      "answer": "They are the 'how' and the 'what' of decentralised order. Self-organization is the process where internal components interact to create structure or behaviour with no external direction or central controller - it is the engine of interaction. Emergence is the result: complex high-level patterns or properties appearing at the global level that are not present in, and cannot be predicted from, the individual parts in isolation. Problem-solving power comes not from isolated local actions but from interactions among autonomous entities cooperating toward a goal - like ant-colony intelligence arising from interactions among individual ants."
+    },
+    {
+      "id": 197,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Describe Ashby's double-feedback ultra-stable system: what does each loop do, on what time scale?",
+      "answer": "It keeps 'essential variables' inside a viability/physiological zone. First loop (reactive): uses a complicated sensor and actuator system to directly oppose external disturbances; operates on a short time scale, giving immediate default reactions and bringing variables back within the zone as soon as they are pushed toward a limit. Second loop (meta-management): monitors whether the first loop is succeeding; if default reactions fail under dramatic environmental change, it intervenes on a larger/longer time scale - it does not react to every small disturbance but evaluates the system's trend, and rather than fixing the variable directly it reconfigures the reactive behaviour of the first loop so the system finds a new way to stay within limits."
+    },
+    {
+      "id": 198,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Explain the four MAPE phases in detail, including what techniques Analyze can use.",
+      "answer": "Monitor: collects data from sensors and context sources, filtering, transforming, and aggregating raw data into a coherent model of the managed system and its environment - can be passive (third-party OS/infrastructure tools) or active (embedded probes). Analyze: evaluates that model to detect problems or suboptimal states and determine a target state, using ECA rules (when X occurs and Y holds, do Z), utility functions (numeric desirability score - good for dynamic environments and resource allocation, hard to define correctly), or goal policies (state the desired outcome rather than the rule - flexible but require planning). Plan: determines the sequence of management actions to move from current to desired state; plans can be domain-specific or generic. Execute: carries the plan out via effectors, handling real-world timing, synchronization, and ordering constraints."
+    },
+    {
+      "id": 199,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Why is Knowledge (K) considered the heart of the MAPE-K architecture?",
+      "answer": "It is the central repository that connects all four components together and allows them to work as a single component rather than four disconnected stages - every phase reads from and writes to it, and it holds both innate and acquired knowledge."
+    },
+    {
+      "id": 200,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "What are touchpoints, and how do they let a manager handle an artefact too complex to be fully known?",
+      "answer": "Touchpoints are the interfaces between the autonomic manager and the managed artefact: sensors expose observable state, effectors expose controllable operations. They reduce complexity by filtering the artefact's internal state into manageable meaningful metrics, exposing only adaptation-relevant actions, hiding unnecessary or unstable internal details, and ensuring interaction is predictable and bounded - making autonomic control feasible without a complete model of the artefact."
+    },
+    {
+      "id": 201,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Distinguish innate knowledge from knowledge by acquaintance, with a cloud example of each.",
+      "answer": "Innate (a priori): knowledge engraved into the system by designers and architects before it ever runs - e.g. 'if the CPU exceeds 80% of usage, then add a new VM'; the system knows this a priori. Knowledge by acquaintance (acquired): information obtained at runtime through direct interaction with the environment and managed system - e.g. 'there are 4200 users online right now', which the system learns by observing traffic."
+    },
+    {
+      "id": 202,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Explain the ECA rule mechanism: its advantages, and the conflict problem it creates.",
+      "answer": "Reflex-oriented managers are typically stateless, reacting to external events in a reflex, non-deliberative manner via Event-Condition-Action rules that directly produce adaptation plans from event/condition combinations. A rule fires when an Event occurs, a Condition holds, and an Action executes. Advantages: simplicity and rapidity - straightforward to write, fast, works well for real-time, effective for a small number of policies or orthogonal concerns. Limitations: no long-term reasoning or learning, hard to manage at scale, and the conflict problem - one event may satisfy the conditions of two ECA rules dictating conflicting actions, and such conflicts cannot always be detected when writing the policies (some only surface at runtime), meaning a human may remain in the loop to resolve them."
+    },
+    {
+      "id": 203,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "What is model-driven autonomicity, what three models are maintained, and how does separation of concerns apply?",
+      "answer": "An approach where the autonomic system maintains explicit synchronized models at runtime (model@runtime) to drive self-management, separating data from logic so the MAPE loop focuses on 'know-how' (decision-making) instead of data collection and representation. Three models: Structure/Architecture (the software components and their interconnections - what the system is), Environment (external context and computing resources - what the system faces), Non-functional (quality attributes such as security and performance - how well it should perform). Separation of concerns keeps them distinct but linked, so each can evolve independently (e.g. updating security rules without changing the architecture), keeping the manager's code leaner and easier to modify."
+    },
+    {
+      "id": 204,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Contrast goal-based and utility-based systems, and say when a utility function becomes necessary.",
+      "answer": "A goal-based system classifies states strictly as desirable or undesirable and seeks a target state; if the ideal state is unreachable, it cannot tell which undesirable state is least bad. A utility-based system relies on a quantitative level of desirability of a given state, calculating the relative utility of each combination so states can be ranked and compared. A utility function is necessary to resolve conflicting goals when insufficient resources exist to satisfy all demands simultaneously - e.g. balancing performance, cost, and energy - letting the manager mathematically find the best available combination."
+    },
+    {
+      "id": 205,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "What three components define a search-based reasoning problem in autonomic computing?",
+      "answer": "1) Initial and target states: a description of the initial state (the current situation of the managed artefacts, captured through touchpoints) paired with descriptions of acceptable target states/goals. 2) A set of actions that can be performed on the managed artefacts, executed via the system's effectors. 3) A transition model defining exactly which actions move the system from one state to another - mapping how individual actions produce state changes so the algorithm can navigate the problem space."
+    },
+    {
+      "id": 206,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "How does an architectural model reflect a managed system, and why must it stay 'causally connected'?",
+      "answer": "It represents the system as a logical graph where nodes are components (computational tasks) and arcs are connectors (communication paths). It reflects requirements as a set of constraints and properties rather than a fixed configuration (e.g. mandating a minimum number of active server components for throughput), and mirrors the environment via sensor data like network latency. Causal connection keeps model and running software synchronized, which is fundamental for integrity verification: the manager applies and verifies adaptation plans on the model first, guaranteeing a change won't violate constraints before it hits live resources. It is also the primary defence against the stale state paradox - without tight synchronization a manager might execute a repair plan based on an outdated belief (e.g. adding a server to fix an overload that already passed), destabilizing the environment."
+    },
+    {
+      "id": 207,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "Explain Probability of Correctness (PoC) and how sensor fusion reduces uncertainty.",
+      "answer": "PoC measures how reliable each Context Provider is. When several CPs report on the same situation the manager weighs their inputs by PoC instead of trusting any single one, allowing reasoning under uncertainty and avoiding being misled by a noisy or faulty provider. Different sensors have different failure modes, so combining outputs (e.g. a camera and a pressure pad) gives corroborating evidence - independent errors rarely align, letting the manager reach a more confident conclusion."
+    },
+    {
+      "id": 208,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "How can an autonomic system that learns use reinforcement learning?",
+      "answer": "Learning systems use reinforcement learning - inspired by the biological dopamine reward signal - to improve performance over time, letting a generic manager start with basic 'innate' rules and develop sophisticated, specialized behaviours for its specific environment, including updating its knowledge or even its utility functions."
+    },
+    {
+      "id": 209,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "FC2 Scenario: an AM monitors CPU utilization, response time, and availability, analyzes SLO violations, and decides the number of VMs to add/remove so SLOs are met at minimal cost. Which self-* capability is this, and why?",
+      "answer": "Self-optimization. The AM constantly analyzes performance metrics to balance conflicting objectives - guaranteeing performance thresholds (SLOs) while simultaneously ensuring the cost of virtual resources stays minimal. The defining feature is the cost/performance tradeoff, not just failure recovery."
+    },
+    {
+      "id": 210,
+      "topic": "FC2 - Autonomic Computing",
+      "question": "FC2 Scenario: an AM monitors the health of containerized image-recognition instances and starts a replacement whenever healthy instances drop below seven. Which self-* capability is this, and why?",
+      "answer": "Self-healing. The AM continuously monitors the health state of the containerized application instances; when a failure drops the healthy count below the required threshold of seven, it recovers the system by starting a replacement instance and adding it to the load-balancing pool. There is no optimization tradeoff - just detect, replace, recover."
+    },
+    {
+      "id": 211,
+      "topic": "FC3 - Autoscaling",
+      "question": "Name and describe the four MAPE phases as applied to auto-scaling.",
+      "answer": "Monitoring: a monitoring system gathers information about the system and application state. Analysis: the auto-scaler uses that information to estimate future resource utilization and needs. Planning: the auto-scaler plans a suitable resource modification action, e.g. removing a VM or adding extra memory. Execution: the provider executes the actions as requested by the auto-scaler."
+    },
+    {
+      "id": 212,
+      "topic": "FC3 - Autoscaling",
+      "question": "Compare reactive and proactive auto-scaling. Why is proactivity necessary for sudden bursts?",
+      "answer": "Reactive auto-scalers perform no prediction and just respond to current system status, so they may fail to scale in time for sudden traffic bursts. Proactive auto-scalers use sophisticated techniques to predict future demand and arrange provisioning with enough anticipation. Anticipation matters because there is always a delay between executing a scaling action and it becoming effective - assigning a physical server, moving the VM image, booting the OS and application, and getting the server fully operational takes several minutes."
+    },
+    {
+      "id": 213,
+      "topic": "FC3 - Autoscaling",
+      "question": "Why might an auto-scaler use a proxy metric like CPU utilization instead of a direct application-level metric?",
+      "answer": "Because it reduces the complexity of the monitoring system: CPU utilization is available at the hypervisor level, while metrics like current system workload live at the application level and require deeper instrumentation."
+    },
+    {
+      "id": 214,
+      "topic": "FC3 - Autoscaling",
+      "question": "How does VM boot-up time undermine reactive auto-scaling?",
+      "answer": "Booting a VM takes several minutes, so reactive auto-scaling is inherently too slow for sudden traffic bursts - the system stays under-provisioned and vulnerable to congestion and SLA violations for the entire window while waiting for the new resources to come online."
+    },
+    {
+      "id": 215,
+      "topic": "FC3 - Autoscaling",
+      "question": "Define under-provisioning, over-provisioning, and oscillation.",
+      "answer": "Under-provisioning: the application doesn't have enough resources to process all incoming requests within the temporal limits imposed by the SLA. Over-provisioning: the application has more resources than needed to comply with the SLA. Oscillation: a combination of both undesirable effects, occurring when scaling actions are carried out too quickly, before the impact of each scaling action on the application can be observed."
+    },
+    {
+      "id": 216,
+      "topic": "FC3 - Autoscaling",
+      "question": "What is the structure of a threshold-based rule, and what is the purpose of a cooldown/calm period?",
+      "answer": "A condition (e.g. CPU_util >= threshold sustained for durU seconds) paired with an action (add/remove N VMs). The cooldown/calm period takes place after an action has been taken, during which no scaling decisions can be made - it prevents oscillation, the situation where actions are carried out too quickly before the impact of each action can be seen."
+    },
+    {
+      "id": 217,
+      "topic": "FC3 - Autoscaling",
+      "question": "What happens if thrU = thrL for a given performance metric?",
+      "answer": "The auto-scaler would never leave the resource allocation stable and would keep scaling out or in / up or down continuously, making the system unstable."
+    },
+    {
+      "id": 218,
+      "topic": "FC3 - Autoscaling",
+      "question": "Why are multiple staggered threshold rules more effective than a single fixed threshold like 'if CPU > 65% add 2 VMs'?",
+      "answer": "Four reasons. Proportional Response: it matches the scale-out action to the severity of the load increase. Cost Efficiency: it prevents over-provisioning - if CPU hits 66% you only pay for 1 new VM instead of wasting money on 2. Performance Protection: it still aggressively adds 2 VMs during severe spikes to prevent bottlenecks. Trend Awareness: multiple thresholds help the system distinguish a slow steady load creep from a sudden massive traffic burst."
+    },
+    {
+      "id": 219,
+      "topic": "FC3 - Autoscaling",
+      "question": "What triggering strategy does the 'for durU sec then' condition implement, and what are the alternatives?",
+      "answer": "It implements a Conservative triggering strategy within threshold-based rules - requiring the deviation to be observed consistently over several recent time-steps. The alternatives are Reactive (triggers immediately on a threshold breach, which can cause unnecessary scaling for split-second anomalies) and Predictive. The benefit of conservativeness is reduced system noise and operational overhead - highly favourable when evaluated by metrics like the number of auto-scaling operations taking place."
+    },
+    {
+      "id": 220,
+      "topic": "FC3 - Autoscaling",
+      "question": "What is the primary role of Time Series Analysis in auto-scaling, and what most influences its accuracy?",
+      "answer": "To predict future workload and needed resources from historical data, enabling proactive auto-scaling. Techniques fall into two groups: those that directly predict future values, and those that identify a pattern in the time series and extrapolate it. Accuracy depends on model choice, history window (how far into the past we look), and prediction interval (how far into the future we predict)."
+    },
+    {
+      "id": 221,
+      "topic": "FC3 - Autoscaling",
+      "question": "Explain the difference between feedback and feed-forward controllers, and why they're combined.",
+      "answer": "Feedback controllers look at system output and correct any deviation from the desired value after the fact. Feed-forward controllers anticipate errors in the output, predicting system behaviour using a model and reacting before the error actually occurs. The problem is that this prediction may fail - which is why feedback and feed-forward controllers are usually combined."
+    },
+    {
+      "id": 222,
+      "topic": "FC3 - Autoscaling",
+      "question": "How does Queuing Theory estimate response time, and what is its major limitation for general-purpose auto-scaling?",
+      "answer": "It models the application as a mathematical waiting line: requests arrive at mean rate lambda and are processed at mean service rate mu. In an M/M/1 model (exponential arrivals and service times) mean response time is R = 1/(mu - lambda). Little's Law relates the average number of requests in the system to arrival rate and time spent: E[C] = lambda x E[T]. Limitation: the models are too rigid - they assume a fixed architecture, so parameters must be periodically recalculated and metrics recomputed whenever the workload or application structure changes, making QT computationally expensive and less effective for highly dynamic elastic cloud environments."
+    },
+    {
+      "id": 223,
+      "topic": "FC3 - Autoscaling",
+      "question": "Reinforcement Learning needs no a-priori system model. What is the primary disadvantage of this trial-and-error approach?",
+      "answer": "An extremely long learning phase: before converging to an optimal policy the system may exhibit unacceptably poor initial performance, because it must explore various states and actions to learn which yield the highest rewards. It also faces the curse of dimensionality, where the state space grows exponentially with the number of variables, causing scalability issues and delayed decision-making."
+    },
+    {
+      "id": 224,
+      "topic": "FC3 - Autoscaling",
+      "question": "Give two examples of hybrid auto-scaling techniques combining different approaches.",
+      "answer": "TSA + Threshold rules: Iqbal et al. proposed a hybrid scaler using reactive rules for scaling up (based on CPU usage) and a polynomial-regression-based approach for scaling down, allowing more informed resource release after periods of satisfied response times. CT + RL: Zhu and Agrawal combined a PID controller with an RL agent, where the RL agent estimates the derivative term of the controller to minimize squared error without violating budget or time constraints."
+    },
+    {
+      "id": 225,
+      "topic": "FC3 - Autoscaling",
+      "question": "What are the advantages of a cloud simulator like CloudSim over testing on a real public cloud?",
+      "answer": "Efficiency and speed: experiments taking hours on real infrastructure finish in minutes with an event-based simulator. Controlled environment: simulators isolate the experiment from uncontrolled external factors like interference from other applications or provider-initiated VM consolidations, which are unavoidable on real clouds. Cost and configuration: highly configurable, letting many algorithms be tested without provider fees or constant infrastructure reconfiguration. Data granularity: they allow gathering any system state or performance metric that might be restricted or hard to access via a public provider's API."
+    },
+    {
+      "id": 226,
+      "topic": "FC3 - Autoscaling",
+      "question": "What is the key benefit of real workload traces (World Cup 98, ClarkNet) over synthetic workloads?",
+      "answer": "Real traces capture the chaotic, bursty, unpredictable nature of actual human internet behaviour. Synthetic workloads are smooth, predictable mathematical curves - helpful for controlled tests, but they may not be realistic enough, which is why workloads collected from real production systems are necessary."
+    },
+    {
+      "id": 227,
+      "topic": "FC3 - Autoscaling",
+      "question": "Name two common cloud research benchmarks and the applications they simulate.",
+      "answer": "TPC-W: a complex e-commerce application, specifically an online bookshop, simulating three profiles - primarily shopping, browsing, and web-based ordering. RUBiS: a prototype auction website modelled after eBay, offering selling/browsing/bidding and supporting visitor, buyer, and seller sessions, consisting of an Apache load balancer, a JBoss application server, and a MySQL database server."
+    },
+    {
+      "id": 228,
+      "topic": "FC3 - Autoscaling",
+      "question": "What problem does the adaptive step-size strategy solve that fixed step sizes cannot?",
+      "answer": "With a fixed step size an administrator must pick one static number of VMs to add or remove. Too small, and a large spike takes multiple scaling rounds to handle, causing prolonged SLA violations. Too large, and a minor spike triggers massive over-provisioning, overshooting the target and causing oscillation. The adaptive strategy calculates the exact optimal step size dynamically from the current workload gap, activating a number of machines that brings the system to a satisfactory utilisation level in a single precise move."
+    },
+    {
+      "id": 229,
+      "topic": "FC3 - Autoscaling",
+      "question": "Do multiple threshold rules implement a sort-of adaptive step size?",
+      "answer": "Yes - they act as a coarse-grained, manual version of one. By defining staggered boundaries (a small threshold breach adds 1 VM, a massive breach adds 5), the system scales proportionally to the severity of the deviation, much like an algorithmic adaptive strategy would."
+    },
+    {
+      "id": 230,
+      "topic": "FC3 - Autoscaling",
+      "question": "Give the complete adaptive step-size formulas for scale-in and scale-out, plus the aggressiveness blend.",
+      "answer": "With mti = current VMs, L/U = lower/upper utilization bounds, u = observed utilization. Scale-in (u < L): Conservative = mti x (L - u)/L ; Aggressive = mti x (U - u)/U. Scale-out (u > U): Aggressive = mti x (u - U)/U ; Conservative = mti x (u - L)/L. Blend with aggressiveness degree alpha in [0,1]: step = (1 - alpha) x Conservative + alpha x Aggressive."
+    },
+    {
+      "id": 231,
+      "topic": "FC3 - Autoscaling",
+      "question": "Why is the 'aggressive' vs 'conservative' naming counter-intuitive in adaptive step sizing?",
+      "answer": "An aggressive profile prefers LARGE values for scale-in operations and SMALL values for scale-out operations - i.e. aggressive means resource-saving. Conservative is the opposite bias: it removes fewer resources on scale-in and adds more on scale-out, i.e. it is SLA-protective."
+    },
+    {
+      "id": 232,
+      "topic": "FC3 - Autoscaling",
+      "question": "Worked example: L=50, U=75, mti=4, u=40. Compute the conservative, aggressive, and alpha=0.7 step sizes.",
+      "answer": "u=40 < L=50, so this is a scale-in (utilization too low, remove VMs). Conservative limit (barely bring usage up to 50%): 4 x (0.50 - 0.40)/0.50 = 0.8 VMs. Aggressive limit (push usage to 75%): 4 x (0.75 - 0.40)/0.75 = 1.867 VMs. Aggressive (alpha=1) removes more: 1.867. Conservative (alpha=0) removes fewer: 0.8. At alpha=0.7: (1-0.7)(0.8) + (0.7)(1.867) = 1.547 VMs."
+    },
+    {
+      "id": 233,
+      "topic": "FC3 - Autoscaling",
+      "question": "Worked example: L=50, U=75, mti=4, u=85. Compute the aggressive and conservative limits.",
+      "answer": "u=85 > U=75, so this is a scale-out (utilization too high, add VMs). Aggressive limit (barely drop usage to 75%): 4 x (0.85 - 0.75)/0.75 = 0.533 VMs. Conservative limit (drop usage down to 50%): 4 x (0.85 - 0.50)/0.50 = 2.8 VMs. Note utilization values strictly inside [L,U] - e.g. 66% or 70% - require no scaling at all (0 VMs)."
+    },
+    {
+      "id": 234,
+      "topic": "FC3 - Autoscaling",
+      "question": "What is the aim of the Autoscaling Demand Index (ADI), and its advantage over other metrics?",
+      "answer": "Traditional metrics evaluate either performance (SLA violations) or cost (resource waste) individually. ADI is a unified metric that sums all distances computed between each actual utilization level and the user's target utilization interval. Its primary advantage is employing the exact same metric to evaluate and penalize both unacceptable QoS (over target) and resource underutilization (under target) simultaneously."
+    },
+    {
+      "id": 235,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Why does GFS use HeartBeat messages instead of synchronous request-response between master and chunkservers?",
+      "answer": "Synchronous polling would overload the master and make it wait on slow or failed chunkservers. HeartBeats invert this - chunkservers contact the master periodically, so the master never blocks and can scale to thousands of servers. The master uses them to maintain an accurate view of the system, detect failures, and decide when to re-replicate or delete chunks."
+    },
+    {
+      "id": 236,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Give the three advantages of GFS's 64MB chunk size.",
+      "answer": "1) It reduces clients' need to interact with the master, because reads and writes on the same chunk require only one initial request, and applications mostly read/write large files sequentially. 2) Since a client is likely to perform many operations on a given large chunk, it reduces network overhead by keeping a persistent TCP connection to the chunkserver over an extended period. 3) It reduces the size of the metadata stored on the master."
+    },
+    {
+      "id": 237,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "How does the GFS master obtain chunk location information?",
+      "answer": "The master asks each chunkserver about its chunks at master startup and whenever a chunkserver joins the cluster - locations are never persisted in the operation log, they are rebuilt from the chunkservers themselves."
+    },
+    {
+      "id": 238,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Why is the Operation Log central to GFS?",
+      "answer": "All metadata is kept in the master's memory; namespaces and file-to-chunk mapping are also made persistent by logging mutations to an operation log on the master's local disk, replicated on remote machines. Using a log allows the master state to be updated simply, reliably, and without risking inconsistencies in the event of a master crash."
+    },
+    {
+      "id": 239,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "GFS regions: name the states, when each arises, and how GFS recognizes them.",
+      "answer": "Consistent: all clients see the same data regardless of replica. Defined: consistent AND clients see exactly what the last successful mutation wrote, in full. Inconsistent: different clients may see different data (a mutation failed on some replica). Serial successful mutations -> defined. Concurrent successful mutations -> consistent but undefined (replicas are identical but may hold interleaved fragments from multiple writers). Failed mutation -> inconsistent (and thus undefined). GFS doesn't label regions - the state follows from the protocol: the lease-holding primary imposes one serial mutation order that all replicas follow (giving consistency), and chunk version numbers identify stale replicas that missed mutations so they are excluded."
+    },
+    {
+      "id": 240,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "How does GFS maintain a consistent mutation order across replicas?",
+      "answer": "Via leases: GFS gives one replica the ability to act as primary, and that replica assigns an ordering number to all mutations. All secondary replicas then follow that same order."
+    },
+    {
+      "id": 241,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "What strategy does GFS use to transfer data to replicas while avoiding network bottlenecks and minimizing latency?",
+      "answer": "Data is pushed linearly along a chain of chunkservers rather than distributed in some other topology, to fully utilize each machine's network bandwidth. To avoid bottlenecks and high-latency links, each machine forwards the data to the 'closest' machine in the network topology that has not yet received it."
+    },
+    {
+      "id": 242,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Why is it not important that all GFS replicas are byte-wise identical?",
+      "answer": "For a record append to report success, the data must have been written at the same offset on all replicas of some chunk, and GFS guarantees the data is written at least once as an atomic unit - that is enough. If a record append fails at any replica the client simply retries, so replicas of the same chunk may contain different data, including duplicates of the same record in whole or in part, plus padding. Applications compensate by preferring appends over overwrites, checkpointing, and writing self-validating/self-identifying records with checksums and unique IDs."
+    },
+    {
+      "id": 243,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "What are the two goals of GFS's replica placement policy, and how are they achieved?",
+      "answer": "Maximize data reliability and availability, and maximize network bandwidth utilization. Both are achieved by spreading chunk replicas across machines AND across racks: this ensures some replicas survive and remain available even if an entire rack is damaged or offline, and it means traffic for a chunk can exploit the aggregate bandwidth of multiple racks."
+    },
+    {
+      "id": 244,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "How does the GFS master choose where to place a newly created chunk, and when does it re-replicate?",
+      "answer": "Placement criteria: prefer chunkservers with below-average disk space utilization, limit the number of recent creations on each chunkserver, and spread replicas of a chunk across racks. The master re-replicates a chunk as soon as the number of available replicas falls below a user-specified goal."
+    },
+    {
+      "id": 245,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "How is the GFS master state replicated, and why are 'shadow' masters preferred to 'mirror' replicas?",
+      "answer": "GFS writes every operation-log record and checkpoint to multiple remote machines, so any replica can recover the master's in-memory metadata after a crash. Shadow masters are preferred over mirrors because they are read-only, slightly-behind copies that avoid the complexity and latency of perfectly synchronized mirrors while still improving availability."
+    },
+    {
+      "id": 246,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Explain image, checkpoint, and journal in HDFS.",
+      "answer": "Image: the filesystem metadata stored entirely in the NameNode's RAM, describing the organization of application data as directories and files - comprising inode data (permissions, modification times, quotas) and each file's block list. Journal: a write-ahead commit log on the local host's native filesystem recording all modifications that must be persistent; for every client transaction the change is recorded, flushed, and synced before being committed to the client. Checkpoint: the persistent on-disk record of the namespace image - never modified during normal operation, it is entirely replaced when a new checkpoint is created (at restart or by a CheckpointNode)."
+    },
+    {
+      "id": 247,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "What information do HDFS heartbeats carry, and how does the NameNode communicate back to DataNodes?",
+      "answer": "Heartbeats confirm the DataNode is operating and its block replicas are available, carrying total storage capacity, the fraction of storage in use, and the number of data transfers currently in progress - used for space allocation and load balancing. The NameNode never calls DataNodes directly; it uses the replies to heartbeats to send instructions back: replicate blocks to other nodes, remove local block replicas, re-register or shut down, or send an immediate block report."
+    },
+    {
+      "id": 248,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "When and why do a DataNode and NameNode perform a handshake, and what happens afterward?",
+      "answer": "At DataNode startup, to verify the namespace ID and software version. If either doesn't match the NameNode's, the DataNode automatically shuts down - preserving filesystem integrity and preventing incompatible versions from causing corruption or loss. After a successful handshake the DataNode registers; on first registration it receives a unique storage ID that it persistently stores. Immediately after, it sends its first block report identifying all block replicas in its possession, with block IDs, generation stamps, and lengths."
+    },
+    {
+      "id": 249,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Can HDFS store files with different replication factors, and why would you want that?",
+      "answer": "Yes - replication factor is user-selectable on a file-by-file basis. The default is three, but critical or very frequently accessed files can be given a higher replication factor to improve fault tolerance and increase read bandwidth."
+    },
+    {
+      "id": 250,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "How does HDFS verify block corruption, and is it only checked by the client at read time?",
+      "answer": "At file creation the client computes a sequence of checksums for each block and sends them to the DataNode, which stores them in a separate metadata file. On read, the DataNode ships both the block data and its checksums; the client recomputes the checksum and compares - on mismatch it notifies the NameNode of the corrupt replica and fetches a different one. It is NOT only client-side: each DataNode also runs a background block scanner that periodically scans its local replicas to verify stored checksums against the actual data, proactively notifying the NameNode of any corrupt block."
+    },
+    {
+      "id": 251,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "What are the recommended practices for storing the HDFS checkpoint and journal, and why does the CheckpointNode periodically merge them?",
+      "answer": "Store checkpoint and journal in multiple storage directories on DIFFERENT volumes to prevent loss from a single volume failure, with one directory on a remote NFS server to protect against the failure of the entire node. The CheckpointNode merges the existing checkpoint and journal into a new checkpoint and empty journal so the system can restart from a more recent checkpoint if other persistent copies are unavailable, and so the NameNode can truncate the journal tail. HDFS clusters run for prolonged periods without restarts during which the journal constantly grows - a very large journal increases the probability of loss/corruption and extends restart time (for a large cluster, processing a week-long journal takes an hour)."
+    },
+    {
+      "id": 252,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Does HDFS allow random writes, and can multiple clients write to a file simultaneously?",
+      "answer": "No to both. Only appending to a file is possible - random writes at a specified offset are not supported. HDFS implements a strict single-writer, multiple-reader model: the client that opens a file for writing is granted a lease ensuring exclusive access."
+    },
+    {
+      "id": 253,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Walk through the HDFS write steps.",
+      "answer": "1) Block Allocation: the client requests the NameNode nominate a suite of DataNodes (typically three) to host the block replicas. 2) Buffering and Packets: bytes written by the application are buffered client-side; once a packet buffer fills, the data is pushed to the pipeline. 3) Pipelining: the client organizes a node-to-node pipeline and sends data; as the first DataNode receives it, it forwards to the next. 4) Next Block: when the first block fills, the client requests new DataNodes for the next block and a new pipeline is organized."
+    },
+    {
+      "id": 254,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Walk through the HDFS read steps. Are concurrent read and write on a file permitted?",
+      "answer": "1) Fetching locations: the client contacts the NameNode for the list of DataNodes hosting the file's block replicas, returned ordered by distance from the reader. 2) Reading data: the client contacts a DataNode directly and requests the block, attempting the closest replica first and trying the next in sequence on failure. 3) Verification: the client receives block data plus checksums and verifies they match. Multiple clients can read simultaneously - the writer's exclusive lease does not prevent readers. HDFS also permits reading a file currently open for writing; since the NameNode doesn't know the exact length of the last block still being written, the reading client asks a replica directly for the latest length before reading."
+    },
+    {
+      "id": 255,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Describe the default HDFS block placement policy and its rationale.",
+      "answer": "The NameNode places the first replica on the node where the writer is located; the second and third on two different nodes in a DIFFERENT rack; any further replicas on random nodes, provided no single node has more than one replica and no rack has more than two (if there are enough racks). This minimizes network write traffic by using only two unique racks instead of three, while still guaranteeing data survival if an entire rack fails. Once selected, target DataNodes are organized into a pipeline ordered by proximity to the first replica; for reads, locations are returned ordered by distance from the reader."
+    },
+    {
+      "id": 256,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "How does HDFS guarantee balanced disk utilization across cluster DataNodes?",
+      "answer": "Because the initial block placement strategy ignores node disk capacity (to avoid creating performance bottlenecks), data can become unevenly distributed. Administrators run a background tool called the Balancer, which iteratively moves replicas from over-utilized nodes to under-utilized ones until every node's disk usage is within a configured threshold of the overall cluster average - without ever reducing the total number of replicas or racks."
+    },
+    {
+      "id": 257,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Compare GFS and HDFS on client/master/storage-node interaction: what's the same, what differs?",
+      "answer": "Same: both use a single-master architecture where the master holds all metadata and data flows directly between clients and storage nodes - client asks master for metadata, master replies with chunk/block locations, client talks to the chunkserver/DataNode directly for the transfer. Differs: GFS grants a chunk lease to one replica (the primary), which picks a serial order for all mutations that every replica follows; HDFS has no chunk-level write lease - the client simply pipelines data to the DataNodes the NameNode nominated. HDFS does have a file-level lease (renewed via heartbeat, revoked on close) for write exclusivity. Also, GFS clients cache chunk locations and the master proactively includes metadata for immediately following chunks in its reply, sidestepping future round-trips; HDFS does not."
+    },
+    {
+      "id": 258,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Compare GFS and HDFS on master-to-storage-node communication.",
+      "answer": "Same: both rely on periodic heartbeats from storage nodes to the master, and both piggyback commands onto heartbeat replies rather than having the master initiate separate RPCs. Differs: block reporting is more formally structured in HDFS - DataNodes send a full block report immediately after registration and then every hour, giving the NameNode a continuously up-to-date view of replica locations. In GFS the master simply polls chunkservers at startup and relies on heartbeats plus its own control over chunk placement to stay current - there is no scheduled periodic full report. HDFS heartbeats also carry richer load data (capacity, fraction in use, in-progress transfers) used for placement and load-balancing decisions; GFS heartbeats do not."
+    },
+    {
+      "id": 259,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Compare GFS and HDFS on replication/placement strategy and block size.",
+      "answer": "Same: both default to three replicas spread across racks, and both use prioritized re-replication queues where chunks/blocks closest to total loss get highest priority for cloning. Differs: HDFS specifies its placement policy precisely (writer's node, then two nodes in a different rack, with per-node and per-rack caps); GFS describes placement GOALS rather than a fixed algorithm (prefer below-average disk utilization, limit recent creations per server, spread across racks). HDFS ships a dedicated Balancer tool that moves replicas from overloaded to underutilized DataNodes while preserving rack diversity - GFS describes no equivalent. Block size: GFS uses 64MB, HDFS defaults to 128MB (user-configurable per file)."
+    },
+    {
+      "id": 260,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Compare GFS and HDFS on access modes - what is the single most significant divergence?",
+      "answer": "Both are optimized for large sequential reads and appends (GFS for streaming reads and sequential appends with random writes practically non-existent; HDFS for MapReduce-style batch throughput). The most significant divergence is the write model: HDFS enforces strict single-writer access - after a file is closed, bytes cannot be altered, only appends on reopening. GFS supports concurrent multi-writer appends as a first-class primitive: record append lets multiple clients append to the same file concurrently while guaranteeing atomicity for each individual append, making it ideal for producer-consumer queues and multi-way merges. HDFS does allow reading a file open for writing, and exposes an explicit hflush operation for applications needing read visibility before close."
+    },
+    {
+      "id": 261,
+      "topic": "FC4 - Cloud Storage: GFS & HDFS",
+      "question": "Compare GFS and HDFS on data integrity, high availability, and failure recovery.",
+      "answer": "Integrity: GFS verifies at the chunkserver - each chunk is split into 64KB blocks each with a 32-bit checksum stored in memory and on disk separately from user data; on mismatch the chunkserver returns an error, the client reads another replica, and the master clones a fresh copy before deleting the corrupt one. HDFS is client-driven - the client computes checksums at write and re-verifies at read, notifying the NameNode and fetching another replica on mismatch, backstopped by each DataNode's background block scanner. HA: both replicate master state via an operation log (GFS) or journal/EditLog (HDFS) bounded by checkpoints; GFS offers shadow masters (read-only, slightly lagging) for metadata reads during downtime, whereas HDFS at paper time acknowledged the NameNode as a single point of failure and was working toward ZooKeeper-based automated failover with a BackupNode as a stepping stone. Recovery: both use version/generation numbers to identify stale replicas, and both use lazy deletion - GFS renames deleted files to a hidden name and reclaims after three days; HDFS moves them to a trash directory before asynchronously reclaiming blocks."
+    },
+    {
+      "id": 262,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What does a Google SSTable internally contain, and what are the core steps of an SSTable lookup?",
+      "answer": "An SSTable is a map with a key-value structure where key and value are both arbitrary byte strings, containing a sequence of blocks plus a block index. A lookup can be performed with a single disk seek: first find the appropriate block by binary search in the in-memory index, then read that block from disk. It is also possible to do the lookup without any disk access by loading the entire SSTable into memory."
+    },
+    {
+      "id": 263,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What is Chubby, and list the tasks BigTable uses it for.",
+      "answer": "A lock service using 5 replicas and the Paxos algorithm to ensure high availability and persistence. BigTable uses it to: ensure there is at most one active master at any time; store the bootstrap location of BigTable data; discover tablet servers and finalize tablet server deaths; store BigTable schema information; store access control lists."
+    },
+    {
+      "id": 264,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How is a BigTable split among multiple files?",
+      "answer": "In two layers: the table is divided into row ranges called tablets (the main unit of distribution), and each tablet is stored as multiple SSTable files on disk plus an in-memory memtable."
+    },
+    {
+      "id": 265,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What are the responsibilities of the BigTable Master server versus the Tablet servers?",
+      "answer": "Master: assigning tablets to tablet servers, detecting the addition and expiration of tablet servers, balancing tablet-server load, and garbage collection of files in GFS. Tablet server: handles read and write requests to the tablets it has loaded, and splits tablets that have grown too large."
+    },
+    {
+      "id": 266,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How are BigTable tablet locations stored and handled?",
+      "answer": "A rigid three-tier structure. Chubby file: the top level, pointing to the location of the root tablet. Root tablet: the first tablet in the METADATA table, treated specially and never split, storing the locations of all other METADATA tablets. METADATA tablets: store the actual locations of user tablets, keyed by a row key encoding the tablet's identifier and its end row. Locations are usually cached in the client library; if the cache is empty the algorithm recursively climbs the hierarchy. Tablet locations live in memory so no GFS accesses are required, and the client library prefetches tablet locations to further reduce cost."
+    },
+    {
+      "id": 267,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How does the BigTable master discover tablet servers and check whether one is still serving?",
+      "answer": "The master monitors a 'servers' directory in Chubby. When a tablet server starts, it creates and acquires an exclusive lock on a uniquely-named file in that Chubby directory. To check liveness, the master periodically asks each tablet server for the status of its lock."
+    },
+    {
+      "id": 268,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What does the BigTable master do when it discovers a tablet server has failed?",
+      "answer": "If a tablet server reports it lost its lock, or the master couldn't reach it over several attempts, the master attempts to acquire an exclusive lock on that server's file. If the master succeeds, Chubby is live and the tablet server is either dead or unable to reach Chubby - so the master ensures that server can never serve again by deleting its server file. Once deleted, the master moves all tablets previously assigned to it into the set of unassigned tablets."
+    },
+    {
+      "id": 269,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What happens if the BigTable master's connection with Chubby is disrupted? Does it affect tablet assignment?",
+      "answer": "The master kills itself. Its failure does NOT change the assignment of tablets to tablet servers."
+    },
+    {
+      "id": 270,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "List the steps executed by the BigTable master at startup.",
+      "answer": "1) Grab a unique master lock in Chubby, preventing concurrent master instantiations. 2) Scan the servers directory in Chubby to find live servers. 3) Communicate with every live tablet server to discover what tablets are already assigned to each. 4) If no assignment for the root tablet was discovered, add the root tablet to the set of unassigned tablets (ensuring it gets assigned, so METADATA tablets can be found). 5) Scan the METADATA table to learn the full set of tablets, adding any not already assigned to the unassigned set."
+    },
+    {
+      "id": 271,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "When does the set of existing BigTable tablets change, and which changes does the master initiate?",
+      "answer": "Only when a tablet is created or deleted, two existing tablets are merged into one larger tablet, or an existing tablet is split into two smaller ones. The master initiates all but the last (splits are triggered by the tablet server itself), which is how it keeps track of these changes."
+    },
+    {
+      "id": 272,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How do read and write operations work at a BigTable tablet server, and what is minor compaction?",
+      "answer": "Write: the server checks the request is well-formed and the sender authorized (reading the permitted-writers list from a Chubby file); a valid mutation is written to the commit log and its contents inserted into the memtable, an in-memory sorted buffer. When the memtable reaches a size threshold it is frozen, converted into an SSTable, and written to GFS - this is minor compaction. Read: similarly checked for well-formedness and authorization, then executed on a merged view of the current memtable and the sequence of on-disk SSTables; since both are lexicographically sorted, the merged view forms efficiently."
+    },
+    {
+      "id": 273,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How does a BigTable tablet server recover a tablet?",
+      "answer": "It reads the tablet's metadata from the METADATA table, which contains the list of SSTables comprising the tablet and a set of redo points (pointers into the commit log). The server loads the SSTable indices into memory and reconstructs the memtable by replaying all mutations recorded in the commit log since those redo points."
+    },
+    {
+      "id": 274,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "BigTable keeps one commit log per tablet server, not per tablet. What problem does this cause on recovery, and how is it solved?",
+      "answer": "One log per server improves write performance but complicates recovery: when a server fails its tablets are redistributed across many different servers, each needing only the log entries for its own tablets - but the log interleaves mutations from different tablets. If each server read the entire log, and e.g. 100 servers each recover a single tablet, the log would be read 100 times in full. Solution: before recovery, the master instructs that the commit log be sorted by the key (table, row name, log sequence number). After sorting, mutations for the same tablet are contiguous, so each new tablet server efficiently reads only its relevant portion with a single disk seek followed by a sequential read. To parallelize the sort, the log is partitioned into 64MB segments sorted in parallel across different tablet servers, coordinated by the master."
+    },
+    {
+      "id": 275,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "Why is partitioning introduced in Dynamo, and how is it implemented?",
+      "answer": "To scale incrementally as Amazon's workload grows: the system needs to distribute data dynamically across many storage nodes, avoid hotspots (no single node overloaded), add or remove nodes with minimal impact, and maintain high availability as it grows. Implemented with consistent hashing plus virtual nodes: the hash space is a ring, each node is assigned a random position on it, each key hashes to a position, and the key is stored on the first node clockwise from that value - so only a small portion of keys move when nodes join or leave."
+    },
+    {
+      "id": 276,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How is data assigned to Dynamo storage nodes, and how is a node's subset of responsibility determined?",
+      "answer": "Each key is hashed with MD5 to produce a 128-bit identifier placed on the consistent-hashing ring; the key is stored on the first node encountered moving clockwise from that hash. A node's subset is the portion of the ring between its predecessor's token and its own token - all keys whose hash falls in that interval are its responsibility. With replication, a node also stores the keys falling into the ranges of its N-1 predecessors."
+    },
+    {
+      "id": 277,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What are the two concerns with consistent hashing, and how does Dynamo resolve each?",
+      "answer": "First: assigning each physical node a single random ring position leads to uneven data distribution - some nodes own much larger key ranges than others, creating load imbalance. Resolved with virtual nodes: each physical node gets many ring positions, so it owns several smaller scattered intervals instead of one large one. Second: consistent hashing does not account for heterogeneity in node capacity - it treats all machines the same. Resolved by letting stronger machines take on more virtual nodes and weaker ones fewer, making load proportional to actual capability."
+    },
+    {
+      "id": 278,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What replication strategy does Dynamo use, and how does it guarantee the N replicas land on distinct physical nodes?",
+      "answer": "Every data item is replicated on N nodes (N configurable). The coordinator - the node responsible for that key - stores it locally then replicates to the next N-1 nodes clockwise on the ring. Because of virtual nodes, several of the first N ring positions could belong to the same physical machine; Dynamo builds the preference list by skipping positions owned by a physical node already included, continuing clockwise until it has collected N distinct physical nodes."
+    },
+    {
+      "id": 279,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "Why is data versioning introduced in Dynamo, how is it implemented, and when are two changes in conflict?",
+      "answer": "Because Dynamo accepts updates even when replicas are temporarily unreachable, so different replicas may receive updates independently and the system must avoid losing any - this 'always writeable' design means keeping multiple versions rather than forcing immediate consistency. Implemented with vector clocks: each version carries a vector clock recording which nodes updated it and in what order; on write the client includes the context from its previous read, and the coordinator uses it to create the new version's vector clock. Two changes conflict when their vector clocks show NO causal ordering - neither clock is less than or equal to the other - meaning the versions were created independently, so both are preserved and returned to the application to reconcile."
+    },
+    {
+      "id": 280,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What can a node do when it receives a Dynamo put request, and when is the write considered successful?",
+      "answer": "The receiving node either forwards the request to the coordinator or acts as coordinator itself. The coordinator creates a new vector clock, writes the value locally, and sends it to the N replica nodes; each replica that receives the message stores the value and sends an acknowledgment. The operation is considered successful when the coordinator receives W acknowledgments."
+    },
+    {
+      "id": 281,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What is a hinted replica, and how does hinted handoff work?",
+      "answer": "A hinted replica is a temporary set of data stored on a backup/substitute node when the intended node is down. The substitute node holds a hint recording where the data should actually have been sent and stored. Hinted handoff means the substitute keeps the data until the original destination node is back up; once it returns, the substitute sends the data over, restoring the initial replica layout and preserving availability."
+    },
+    {
+      "id": 282,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "How does the 'T random tokens per node and partition by token value' strategy work, and what are its limitations?",
+      "answer": "Each node is assigned multiple positions, and the tokens of all nodes are ordered by their values in the hash space, so each node gets many small partitions instead of one large one. Limitations: random token placement produces unbalanced load and makes it hard to match node capacity with token ownership, which leads to frequent partition reshuffling when nodes join or leave."
+    },
+    {
+      "id": 283,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "Compare 'T random tokens per node, equal-sized partitions' with 'Q/S tokens per node, equal-sized partitions'. Which was preferred and why?",
+      "answer": "T random tokens: assigns each node many random ring positions, which helps smooth load but still results in uneven distribution and makes it hard to match token ownership to node capacity. Q/S tokens: divides the ring into equal-sized partitions and gives each node exactly its proportional share, producing predictable and uniform load balance. The first suffers from randomness and imbalance; the second provides controlled, even partitioning and easier scaling. Q/S was preferred because it gives better balance and simpler management."
+    },
+    {
+      "id": 284,
+      "topic": "FC5 - Cloud DB: Dynamo & BigTable",
+      "question": "What are Dynamo's two API primitives and what does each do?",
+      "answer": "Get(key): locates the replicas associated with the key and returns the object, or a list of objects if there are conflicting versions, along with a context. Put(key, context, object): determines which nodes to place the object on based on the key, then writes the replica to disk; the context encodes system metadata such as the object's version."
     }
   ]
 }
